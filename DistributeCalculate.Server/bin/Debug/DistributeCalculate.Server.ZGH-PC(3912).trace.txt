@@ -1,0 +1,42 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 17:18:27: Starting application
+| 
+|   Application	: DistributeCalculate.Server, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Server, Version 1.0.0,  2015/5/6 17:17
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 17:15
+|
+|   Machine    	: ZGH-PC (Process Id 3912)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug\DistributeCalculate.Server.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug/DistributeCalculate.Server.ZGH-PC(3912).trace.txt
++-------------------------------------------------------------------------------------------------
+..17:18:27.255, WcfApplication, windows exit handlers are ready
+..17:18:27.308, Wcf   , Opened service net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService
+##17:18:27.319, EXCEPT, An application error occurred. Please contact the adminstrator with the following information:
+   The calling thread cannot access this object because a different thread owns it.
+   at System.Windows.Threading.Dispatcher.VerifyAccess()
+   at System.Windows.DependencyObject.GetValue(DependencyProperty dp)
+   at System.Windows.Controls.TextBox.get_Text()
+   at DistributeCalculate.Server.Service.DistributeService.Info(String info) in e:\Develop\DistributeCalculate\DistributeCalculate.Server\Service\DistributeService.cs:line 24
+   at DistributeCalculate.Server.MainWindow.<>c__DisplayClass1.<ButtonBase_OnClick>b__0() in e:\Develop\DistributeCalculate\DistributeCalculate.Server\MainWindow.xaml.cs:line 52
+   at Nito.Async.ActionDispatcher.Run()
+   at Nito.Async.ActionThread.<.ctor>b__0()
+   at System.Threading.ThreadHelper.ThreadStart_Context(Object state)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart()
+!!17:18:30.391, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+..17:18:38.315, Wcf   , Closed service net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService
+..17:18:38.350, WcfApplication, exit to Windows after ApplicationError
+| 2015年5月6日 17:18:38 DistributeCalculate.Server.ZGH-PC(3912) stopped, Exit code = 1
++-------------------------------------------------------------------------------------------------

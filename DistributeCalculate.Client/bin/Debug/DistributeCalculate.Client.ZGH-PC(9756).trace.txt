@@ -1,0 +1,22 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 15:27:19: Starting application
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 15:27
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 15:12
+|
+|   Machine    	: ZGH-PC (Process Id 9756)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.vshost.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9756).trace.txt
++-------------------------------------------------------------------------------------------------
+..15:27:19.024, WcfApplication, windows exit handlers are ready

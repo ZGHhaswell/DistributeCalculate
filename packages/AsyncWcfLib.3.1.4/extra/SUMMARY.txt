@@ -1,0 +1,52 @@
+== AsynWcfLib ==
+
+AsyncWcfLib is a software library for distributed computing based on Microsoft WCF.
+AsyncWcfLib is a lightweight message bus bridging Windows and Linux by using the .NET Framework or Mono.
+It supports callback based asynchrony as well as the new async-await pattern available in .NET 4.5.
+
+AsyncWcfLib supports threadsafety through an actor based programming model.
+Actors are loosly coupled system units interacting by passing messages.
+Message objects are passed inside a process between actors running on different threads.
+Also, messages may be passed between actors running on different processes, hosts and operating systems.
+
+The library is designed for configuration free, asynchronous messaging.
+A router application is included. It discovers actors by their name on any linked host, even 
+when host name resolution is not possible because of routing- or operating system limitations.
+
+Large computing intense systems tend to be distributed applications interacting through asynchronous message exchange.
+Important requirements in such systems are:
+
+    * Individual application upgrade without breaking existing, running partner applications.
+    * Automatic reconnect and failure recovery after network interruption. 
+
+AsyncWcfLib focuses on such systems, used e.g. for industrial control and automation.
+It is written in C-sharp and currently available for Microsoft VisualStudio 2012, 2010 and Mono.
+
+All content of http://AsyncWcfLib.sourceforge.net is released under a modified MIT open source license.
+It lets you use the software in your own, possibly closed source project.
+
+
+=== Links ===
+
+    * Homepage  <http://asyncwcflib.sourceforge.net>
+
+
+=== How to start ===
+
+Download AsyncWcfLib-Vx.y.z.zip from <http://sourceforge.net/projects/asyncwcflib>.
+Read <http://sourceforge.net/p/asyncwcflib/wiki/Run AsyncWcfLib.Test1>
+
+Or download the NuGet package "AsyncWcfLib" with Visual Studio 2012 package manager tool and look for the unit tests.
+(see <http://nuget.org/packages/AsyncWcfLib>)
+
+
+
+=== How to get latest library sourcecode ===
+
+You need a subversion commandline client.
+To create a workingcopy enter "svn checkout http://svn.code.sf.net/p/asyncwcflib/code/trunk trunk".
+
+Or have a look on the SourceForge Download page select "Code" and "trunk".
+Currently you cannot, but may be in future you can "Download a GNU tarball".
+This is a zip file containing the latest sourcecode.
+

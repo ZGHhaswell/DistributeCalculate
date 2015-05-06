@@ -1,0 +1,60 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 16:07:45: Starting application
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 16:07
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 15:12
+|
+|   Machine    	: ZGH-PC (Process Id 7448)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(7448).trace.txt
++-------------------------------------------------------------------------------------------------
+..16:07:45.761, WcfApplication, windows exit handlers are ready
+..16:07:45.807, ClientOutput[00]11-->, Connecting svc: 'net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService'
+..16:07:45.931, ClientOutput[01]11<--, Connected  svc: 'DistributeService' in application 'DistributeCalculate.Server.ZGH-PC(3320)' (V1.0), using DistributeCalculate.Contract (V1.0), uri = 'net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService'
+##16:07:45.945, EXCEPT, An application error occurred. Please contact the adminstrator with the following information:
+   AsyncWcfLib: wrong thread synchronization context when responding from 'DistributeService'
+   at SourceForge.AsyncWcfLib.WcfReqIdent.SendResponseFrom(ActorPort service, IWcfMessage msg, AsyncResponseHandler responseHandler) in c:\Stefan\AsyncWcfLib\AsyncWcfLib.Develop\WcfLib\WcfReqIdent.cs:line 140
+   at SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.<TryConnectLegacyAsync>d__0.MoveNext() in c:\Stefan\AsyncWcfLib\AsyncWcfLib.Develop\WcfLib\Basic\WcfBasicClientAsyncAwait.cs:line 44
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.<ThrowAsync>b__0(Object state)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at MS.Internal.Threading.ExceptionFilterHelper.TryCatchWhen(Object source, Delegate method, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.DispatcherOperation.InvokeImpl()
+   at System.Windows.Threading.DispatcherOperation.InvokeInSecurityContext(Object state)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Windows.Threading.DispatcherOperation.Invoke()
+   at System.Windows.Threading.Dispatcher.ProcessQueue()
+   at System.Windows.Threading.Dispatcher.WndProcHook(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndWrapper.WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, Boolean& handled)
+   at MS.Win32.HwndSubclass.DispatcherCallbackOperation(Object o)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at MS.Internal.Threading.ExceptionFilterHelper.TryCatchWhen(Object source, Delegate method, Object args, Int32 numArgs, Delegate catchHandler)
+   at System.Windows.Threading.Dispatcher.LegacyInvokeImpl(DispatcherPriority priority, TimeSpan timeout, Delegate method, Object args, Int32 numArgs)
+   at MS.Win32.HwndSubclass.SubclassWndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam)
+   at MS.Win32.UnsafeNativeMethods.DispatchMessage(MSG& msg)
+   at System.Windows.Threading.Dispatcher.PushFrameImpl(DispatcherFrame frame)
+   at System.Windows.Threading.Dispatcher.PushFrame(DispatcherFrame frame)
+   at System.Windows.Threading.Dispatcher.Run()
+   at System.Windows.Application.RunDispatcher(Object ignore)
+   at System.Windows.Application.RunInternal(Window window)
+   at System.Windows.Application.Run(Window window)
+   at System.Windows.Application.Run()
+   at DistributeCalculate.Client.App.Main() in e:\Develop\DistributeCalculate\DistributeCalculate.Client\obj\Debug\App.g.cs:line 0
+!!16:07:48.981, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+..16:07:57.939, ClientOutput[01]12-->, ClientDisconnectRequest from 'cli://zgh-pc/DistributeCalculate.Client(7448)/ClientOutput'
+..16:07:57.955, WcfApplication, exit to Windows after ApplicationError
+| 2015年5月6日 16:07:57 DistributeCalculate.Client.ZGH-PC(7448) stopped, Exit code = 1
++-------------------------------------------------------------------------------------------------

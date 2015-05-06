@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AsyncWcfLib</id>
+    <version>3.1.4</version>
+    <title>AsyncWcfLib</title>
+    <authors>AsyncWcfLib.sourceforge.net</authors>
+    <owners>AsyncWcfLib.sourceforge.net</owners>
+    <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>http://sourceforge.net/p/asyncwcflib/wiki/Home</projectUrl>
+    <iconUrl>http://sourceforge.net/apps/mediawiki/asyncwcflib/nfs/project/a/as/asyncwcflib/c/c9/Logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Communication library for asynchronous, actor based, distributed computing, based on WCF. Supporting async-await, application internal and external message passing, no config files, service discovery by name, Mono and .NET 3.5 - 4.5.</description>
+    <copyright>Copyright 2013</copyright>
+    <tags>async await wcf actor based threadsafe distributed computing</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Runtime.Serialization" targetFramework="" />
+      <frameworkAssembly assemblyName="Microsoft.VisualStudio.QualityTools.UnitTestFramework" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

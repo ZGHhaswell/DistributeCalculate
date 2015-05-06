@@ -1,0 +1,50 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 15:19:24: Starting application
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 15:19
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 15:12
+|
+|   Machine    	: ZGH-PC (Process Id 8268)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.vshost.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(8268).trace.txt
++-------------------------------------------------------------------------------------------------
+..15:19:24.836, WcfApplication, windows exit handlers are ready
+##15:19:28.244, WcfLib, Unhandled response: SourceForge.AsyncWcfLib.WcfIdleMessage
+!!15:19:29.290, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+##15:19:32.184, WcfLib, Unhandled response: SourceForge.AsyncWcfLib.WcfIdleMessage
+##15:19:32.793, WcfLib, Unhandled response: SourceForge.AsyncWcfLib.WcfIdleMessage
+##15:19:34.884, WcfLib, Unhandled response: SourceForge.AsyncWcfLib.WcfIdleMessage
+| 2015年5月6日 15:19:36 Next trace file://E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(8268).trace.txt
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 15:19:36: Continue tracing 
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 15:19
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 15:12
+|
+|   Machine    	: ZGH-PC (Process Id 8268)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.vshost.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(8268).trace.txt
++-------------------------------------------------------------------------------------------------
+..15:19:36.823, WcfApplication, windows exit handlers are ready

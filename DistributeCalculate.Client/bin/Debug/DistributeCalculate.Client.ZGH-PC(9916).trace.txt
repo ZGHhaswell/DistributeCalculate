@@ -1,0 +1,75 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 17:59:35: Starting application
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 17:59
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 17:15
+|
+|   Machine    	: ZGH-PC (Process Id 9916)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9916).trace.txt
++-------------------------------------------------------------------------------------------------
+..17:59:35.903, WcfApplication, windows exit handlers are ready
+##17:59:37.052, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:37.969, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:38.165, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:38.353, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:38.539, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:38.722, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+##17:59:38.913, WcfLib, Unhandled response: WcfError NotConnected. Cannot post message
+| 2015年5月6日 17:59:39 Next trace file://E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9916).trace.txt
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 17:59:39: Continue tracing 
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 17:59
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 17:15
+|
+|   Machine    	: ZGH-PC (Process Id 9916)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9916).trace.txt
++-------------------------------------------------------------------------------------------------
+..17:59:39.895, WcfApplication, windows exit handlers are ready
+| 2015年5月6日 17:59:40 Next trace file://E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9916).trace.txt
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 17:59:40: Continue tracing 
+| 
+|   Application	: DistributeCalculate.Client, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Client, Version 1.0.0,  2015/5/6 17:59
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 17:15
+|
+|   Machine    	: ZGH-PC (Process Id 9916)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug\DistributeCalculate.Client.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Client\bin\Debug/DistributeCalculate.Client.ZGH-PC(9916).trace.txt
++-------------------------------------------------------------------------------------------------
+..17:59:40.069, WcfApplication, windows exit handlers are ready

@@ -1,0 +1,46 @@
+
++-------------------------------------------------------------------------------------------------
+| TRACE  2015年5月6日 18:01:21: Starting application
+| 
+|   Application	: DistributeCalculate.Server, Instance 0
+|              	  Copyright © Microsoft 2015
+|              	  
+|
+|   Assembly   	: DistributeCalculate.Server, Version 1.0.0,  2015/5/6 18:01
+|   Assembly   	: SF.AsyncWcfLib, Version 3.1.4,  2015/5/6 17:15
+|
+|   Machine    	: ZGH-PC (Process Id 2488)
+|   OS         	: Microsoft Windows NT 6.1.7601 Service Pack 1
+|   Framework  	: .NET Version 4.0.30319.18444
+|   User       	: ZGH (interactive)
+|
+|   Executable 	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug\DistributeCalculate.Server.exe
+|
+|   CurrentDir 	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug
+|   Tracefile  	: E:\Develop\DistributeCalculate\DistributeCalculate.Server\bin\Debug/DistributeCalculate.Server.ZGH-PC(2488).trace.txt
++-------------------------------------------------------------------------------------------------
+..18:01:22.003, WcfApplication, windows exit handlers are ready
+..18:01:22.065, Wcf   , Opened service net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService
+..18:01:23.035, DistributeCalculate.Client.ZGH-PC(9636)/ClientOutput[01]11~~>, ClientConnectRequest to WCF service './DistributeService'
+!!18:01:25.117, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+..18:01:44.863, DistributeCalculate.Client.ZGH-PC(8184)/ClientOutput[02]11~~>, ClientConnectRequest to WCF service './DistributeService'
+!!18:04:01.438, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:06:35.769, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:09:09.085, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:11:42.406, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:14:17.749, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:16:51.067, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:19:24.376, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:21:57.725, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:24:32.036, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:27:05.352, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:29:38.669, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:32:11.989, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:34:45.309, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:37:18.629, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:39:51.940, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:42:25.254, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:44:58.577, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:47:32.910, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:50:06.228, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterService'
+!!18:52:39.540, WcfRouterClt[00]11<--, WCF router service not running at  'net.tcp://localhost:40000/AsyncWcfLib/RouterServ

@@ -1,0 +1,3028 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SF.AsyncWcfLib</name>
+    </assembly>
+    <members>
+        <member name="T:SourceForge.AsyncWcfLib.ActorInput">
+            <summary>
+            <para>This class represents a communication partner (service).</para>
+            <para>It is the destination of a request message and the source of a response message.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.ActorPort">
+            <summary>
+            <para>The base class of ActorInput and ActorOutput.</para>
+            <para>It is the source or destination of message exchange.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IActorPortId">
+            <summary>
+            The public interface of ActorPort for inputs and outputs.
+            Actors may have several outgoing connection to other actors. An incoming connection may receive messages from several actors.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorPortId.ToString(System.String,System.Int32)">
+            <summary>
+            Trace or display formatted status info
+            </summary>
+            <param name="prefix">Start with this text</param>
+            <param name="intendCnt">intend the following lines by some spaces</param>
+            <returns>Formatted communication partner description</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorPortId.Disconnect">
+            <summary>
+            Shutdown the outgoing remote connection. Send a disconnect message to the partner.
+            Close the incoming network connection.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.Name">
+            <summary>
+            Identification in Trace and name of endpoint address in App.config file.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.IsServiceName">
+            <summary>
+            IsServiceName=true : 'Name' is unique in the plant, independant of host or application.
+            IsServiceName=false: For unique identification 'Name' must be combined with HostName, AppName and AppInstance- or ProcessId.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.HostName">
+            <summary>
+            Host running the application
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.AppName">
+            <summary>
+            Name of the application running the actor.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.AppInstance">
+            <summary>
+            Unique instance number of the application (unique in a plant or on a host, depending on WcfDefault.IsAppIdUniqueInPlant).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.ProcessId">
+            <summary>
+            Process id of the application, given by the operating system (unique on a host at a certain time).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.AppIdentification">
+            <summary>
+            The AppIdentification is composed from AppName, HostName, AppInstance and processId to for a unique string
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.AppVersion">
+            <summary>
+            Assembly version of the application.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.CifComponentName">
+            <summary>
+            Assembly name of an important communication interface (message library)
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.CifVersion">
+            <summary>
+            Assembly version of an important communication interface (message library)
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.Uri">
+            <summary>
+            <para>Universal resource identifier for the service or client.</para>
+            <para>E.g. RouterService: http://localhost:40000/AsyncWcfLib/RouterService</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.AddressList">
+            <summary>
+            <para>To support networks without DNS server, the WcfRouter sends a list of all IP-Adresses of a host.</para>
+            <para>May be null, as long as no info from WcfRouter has been received.</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.TimeoutSeconds">
+            <summary>
+            After a service has no message received for TimeoutSeconds, it may render the connection to this client as disconnected.
+            0 means no timeout. 
+            The client should send at least 2 messages each TimeoutSeconds-period in order to keep the correct connection state on the service.
+            A Service is trying to notify 2 messages each TimeoutSeconds-period in order to check a dual-Http connection.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.IsMultithreaded">
+            <summary>
+            Multithreaded partners do not use a message input queue. All threads may directly call InputHandler delegates.
+            Default = false.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.TraceSend">
+            <summary>
+            Trace switch: Traces all sent messages (default = false).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorPortId.TraceReceive">
+            <summary>
+            Trace switch: Traces all received messages (default = false).
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler)">
+            <summary>
+            <para>Creates an address for a client or service running in the current application on the local host.</para>
+            </summary>
+            <param name="name">The application internal name of this service or client.</param>
+            <param name="defaultMessageHandler">The method to be called when a request or response is received and no other handler is applicatable.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandlerAsync)">
+            <summary>
+            <para>Creates an I/O port for an awaitable service or client running in the current application on the local host.</para>
+            </summary>
+            <param name="name">The unique name of a service or the application internal name of a client.</param>
+            <param name="defaultMessageHandlerAsync">The awaitable method to be called when a request or response is received and no other handler is applicatable.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.#ctor">
+            <summary>
+            <para>Creates a dummy address for a client or service not running yet.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.UseDataFrom(SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            <para>(internal) Copy data from a WcfPartnerMessage, but keep SenderContext.</para>
+            </summary>
+            <param name="p">Copy data from partner p</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.ToString">
+            <summary>
+            Trace or display status info
+            </summary>
+            <returns>Readable communication partner description</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.ToString(System.String,System.Int32)">
+            <summary>
+            Trace or display formatted status info
+            </summary>
+            <param name="prefix">Start with this text</param>
+            <param name="intendCnt">intend the following lines by some spaces</param>
+            <returns>Formatted communication partner description</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.Disconnect">
+            <summary>
+            Shutdown the outgoing remote connection. Send a disconnect message to the partner.
+            Close the incoming network connection.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.DisconnectAll">
+            <summary>
+            (static) Close all incoming network connections and send a ServiceDisable messages to WcfRouterService.
+                     Disconnects all outgoing network connections and send ClientDisconnectRequest to connected services.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.PostInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Used by the library to post a request or response message to the input of this partner. May be called on any thread.
+            Usage:
+            Internal:    Post a message into this partners input queue.
+            Serviceside: Sender.PostInput() sends a response from client-stub to the remote client.
+            Clientside:  Post a response into this clients input queue.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/> the 'Sender' property references the sending partner.</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.ActorPort.m_RedirectIncoming">
+            <summary>
+            Incoming messages are directly redirected to this partner (used library intern)
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.ActorPort.m_Connected">
+            <summary>
+            False when not connected or disconnected. Prevents message passing during shutdown.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.OnConnectDisconnect(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            Message is passed to users connect/disconnect event handler, may be overloaded and call a WcfMessageHandler&lt;TSC>
+            </summary>
+            <param name="id">WcfReqIdent containing Message and Sender.</param>
+            <param name="msg">The message.</param>
+            <returns>True when handled.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.StartClockSeconds(System.Int32)">
+            <summary>
+            Start the timer. Use ClockSecondsPassed() to check whether time has passed.
+            </summary>
+            <param name="seconds">Time to pass.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorPort.ClockSecondsPassed">
+            <summary>
+            Check if time has passed.
+            </summary>
+            <returns>True if time has passed.</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.IsServiceName">
+            <summary>
+            IsServiceName=true : A service name must be unique in the plant, independant of host or application.
+            IsServiceName=false: A client  name must for unique identification be combined with application name, host name, instance- or process id.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.Name">
+            <summary>
+            Identification in Trace and name of endpoint address in App.config file.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.AppName">
+            <summary>
+            Unique name of an application or service in the users WcfContract.Namespace.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.AppInstance">
+            <summary>
+            Unique instance number of the application (unique in a plant or on a host, depending on WcfDefault.IsAppIdUniqueInPlant).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.ProcessId">
+            <summary>
+            Process id of the application, given by the operating system (unique on a host at a certain time).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.AppIdentification">
+            <summary>
+            The AppIdentification is composed from AppName, HostName, AppInstance and processId to for a unique string
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.AppVersion">
+            <summary>
+            Assembly version of the application.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.CifComponentName">
+            <summary>
+            Assembly name of an important CifComponent containig some messages
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.CifVersion">
+            <summary>
+            Assembly version of the important CifComponent
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.HostName">
+            <summary>
+            Host running the application
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.Uri">
+            <summary>
+            <para>Universal resource identifier to reach the input of the service or client.</para>
+            <para>E.g. RouterService: http://localhost:40000/AsyncWcfLib/RouterService</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.AddressList">
+            <summary>
+            <para>To support networks without DNS server, the WcfRouter sends a list of all IP-Adresses of a host.</para>
+            <para>May be null, when no info from WcfRouter has been received yet.</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.TimeoutSeconds">
+            <summary>
+            After a service has no message received for TimeoutSeconds, it may render the connection to this client as disconnected.
+            0 means no timeout. 
+            The client should send at least 2 messages each TimeoutSeconds-period in order to keep the correct connection state on the service.
+            A Service is trying to notify 2 messages each TimeoutSeconds-period in order to check a dual-Http connection.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.TraceSend">
+            <summary>
+            Trace switch: Traces all sent messages. Default = false;
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.TraceReceive">
+            <summary>
+            Trace switch: Traces all received messages. Default = false;
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.TraceConnect">
+            <summary>
+            Trace switch: Traces connect/disconnect messages (not to the router). Default = true;
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.Logger">
+            <summary>
+            Set your logging object here (null by default).
+            It is passed to the logging methods of WcfTrc.ITracePlugin.
+            You will use it when writing your own adapter class based on WcfTrc.ITracePlugin.
+            The adapter class is needed to redirect trace output to your own logging/tracing framework.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.LastSentId">
+            <summary>
+            The send id given to the last message sent from this sender.
+            It is used to detect missing messages on the receiving side.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.LastRequestIdSent">
+            <summary>
+            The request id given to the last message sent from this client.
+            The request id is incremented by the client for each request.
+            The same id is returned in the response from the service.
+            It is used to detect programming erors leading to request/response mismatch.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorPort.IsMultithreaded">
+            <summary>
+            Multithreaded partners do not use a message input queue. All threads may directly call InputHandler delegates.
+            Default = false.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IActorInput">
+            <summary>
+            The public input interface of an actor. It may be called from any thread.
+            The members of IActorPortId represent the actor receiving the incoming messages.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorInput.LinkInputToNetwork(System.String,System.Int32,System.Boolean,SourceForge.AsyncWcfLib.IWcfServiceConfiguration)">
+            <summary>
+            Add a WCF service und publish Uri to WcfRouter.
+            </summary>
+            <param name="serviceName">The unique name of the service or null, when this partners name is equal to the servicename. </param>
+            <param name="tcpPort">The TCP port for the service or 0, when automatic port allocation will be used.</param>
+            <param name="publishToRouter">True(=default): The servicename will be published to the WcfRouter on localhost.</param>
+            <param name="serviceConfig">Plugin your own service configuration instead of WcfDefault.DoServiceConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorInput.PostInput(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Threadsafe enqueue message at the receiving partner. No response is expected.
+            </summary>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorInput.PostInputFrom(SourceForge.AsyncWcfLib.ActorOutput,SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Threadsafe enqueue message at the receiving partner.
+            </summary>
+            <param name="sender">The source partner sending the message <see cref="T:SourceForge.AsyncWcfLib.ActorPort"/>. Its default message handler will receive the response.</param>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorInput.PostInputFrom(SourceForge.AsyncWcfLib.ActorOutput,SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)">
+            <summary>
+            Threadsafe enqueue message at the receiving partner.
+            </summary>
+            <param name="sender">The source partner sending the message <see cref="T:SourceForge.AsyncWcfLib.ActorPort"/></param>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+            <param name="responseHandler">The lambda expression executed at the source partner, when a response arrives.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorInput.InputStateFromNetwork">
+            <summary>
+            <para>Gets or sets the state of the incoming service connection from the network.</para>
+            <para>May be called from any thread.</para>
+            <para>Setting InputStateFromNetwork to WcfState.Ok or WcfState.Connecting reconnects a previously disconnected link.</para>
+            <para>These states may be set only after an initial call to TryConnect from the active services internal thread.</para>
+            <para>Setting other states will disconnect the WCF service from network.</para>
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner">
+            <summary>
+            WcfPartners, Services and Clients must implement this interface.
+            It is used for library internal purposes mainly.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.TryConnect">
+            <summary>
+            Connect or reconnect output to the previously linked partner.
+            </summary>
+            <returns>false, when the connection may not be started.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.Disconnect">
+            <summary>
+            Shutdown the outgoing remote connection. Send a disconnect message to the partner.
+            Close the incoming network connection.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.SendOut(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Send a request message to the partner on the outgoing connection.
+            At least a WcfIdleMessage will asynchronously be received through 'PostInput', when the partner has processed the request.
+            ** Usage **
+            Internal:             Send a message to the connected partner running on another thread synchronization context.
+            ActorOutput (client): Send a request to the connected remote service.
+            Serviceside:          Sender.SendOut() send a request from client-proxy to the internal service.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/>the 'Sender' property references the sending partner, where the response is expected.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.PostInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Post a request or response message to the input of this partner.
+            ** Usage **
+            Internal:                                  Post a message into this partners input queue.
+            ActorOutput (client):                      Post a response into this clients input queue.
+            ActorOutput.m_OutputClient (server-proxy): Send a request to the connected remote service.
+            Serviceside:                               Sender.PostInput() sends a response from client-stub to the remote client.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/> the 'Sender' property references the sending partner.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.Uri">
+            <summary>
+            Universal resource identifier for the service or client.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.IWcfBasicPartner.OutstandingResponsesCount">
+            <summary>
+            The number of requests not yet responded by the service connected to this output.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler)">
+            <summary>
+            <para>Creates an input port for an actor running in the current application on the local host.</para>
+            </summary>
+            <param name="name">The unique name of this service.</param>
+            <param name="requestHandler">The method to be called when a request is received.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.#ctor(System.String)">
+            <summary>
+            <para>Creates an input port without handler method for internal purpose.</para>
+            </summary>
+            <param name="name">The unique name of this service.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandlerAsync)">
+            <summary>
+            <para>Creates an awaitable input port for an actor running in the current application on the local host.</para>
+            </summary>
+            <param name="name">The unique name of this service.</param>
+            <param name="requestHandlerAsync">The awaitable method to be called when a request is received.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.#ctor">
+            <summary>
+            <para>Creates a service proxy. Used internally by the client.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.LinkInputToNetwork(System.String,System.Int32,System.Boolean,SourceForge.AsyncWcfLib.IWcfServiceConfiguration)">
+            <summary>
+            Link this input to the network. Remote clients will be able to connect to this service after Open() has been called.
+            When this method is not called, the service is accessible application internally only.
+            </summary>
+            <param name="serviceName">The unique name of the service or null, when this partners name is equal to the servicename. </param>
+            <param name="tcpPort">The TCP port for the service or 0, when automatic port allocation will be used.</param>
+            <param name="publishToRouter">True(=default): The servicename will be published to the WcfRouter on localhost.</param>
+            <param name="serviceConfig">Plugin your own service configuration instead of WcfDefault.ServiceConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.DoPeriodicTasks">
+            <summary>
+            <para>Check client connection-timeouts, should be called periodically.</para>
+            </summary>
+            <returns>True, when a client state has changed</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.Open">
+            <summary>
+            Opens the service for incomming connections (same as TryConnect).
+            The method is accessible only by the owner of this ActorInput object. No interface exposes the method.
+            - Incoming connections from network: Opens a WCF service.
+            Open picks up the synchronization context and must be called on the receiving thread only!
+            A WcfPartnerMessage is received, when the connection is established.
+            The connect-process runs asynchronous and does involve an address registration at the WcfRouter (when RouterClient is not disabled).
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.TryConnect">
+            <inheritdoc />
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.Disconnect">
+            <summary>
+            Close the incoming network connection.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.SendOut(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            May not be called.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/>the 'Sender' property references the sending partner, where the response is expected.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.SendReceiveAsync(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            VS2012 Version:
+            Switch to the actors thread of this input and process the request there.
+            At least a WcfIdleMessage will asynchronously be passed to the Task-return value.
+            </summary>
+            <param name="id">The request to send.</param>
+            <returns>The asynchronous response</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.PostInput(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Used internally: Threadsafe enqueue message at the receiving partner. No response is expected.
+            </summary>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.PostInputFrom(SourceForge.AsyncWcfLib.ActorOutput,SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Used internally: Threadsafe enqueue message at the receiving partner.
+            </summary>
+            <param name="sender">The source partner sending the message <see cref="T:SourceForge.AsyncWcfLib.ActorPort"/>. Its default message handler will receive the response.</param>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.PostInputFrom(SourceForge.AsyncWcfLib.ActorOutput,SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)">
+            <summary>
+            Used internally: Threadsafe enqueue message at the receiving partner.
+            </summary>
+            <param name="sender">The source partner sending the message <see cref="T:SourceForge.AsyncWcfLib.ActorPort"/></param>
+            <param name="msg">The IWcfMessage to enqueue.</param>
+            <param name="responseHandler">The lambda expression executed at the source partner, when a response arrives.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.OnConnectDisconnect(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            Message is passed to users connect/disconnect event handler, may be overloaded and call a WcfMessageHandler&lt;TSC>
+            </summary>
+            <param name="id">WcfReqIdent containing Message and Sender.</param>
+            <param name="msg">The message.</param>
+            <returns>True when handled.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.AddInputClient(SourceForge.AsyncWcfLib.ActorOutput)">
+            <summary>
+            Add a local or remote ActorPort
+            </summary>
+            <param name="clt">the local WcfBasicClientAsync</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput.RemoveInputClient(SourceForge.AsyncWcfLib.ActorOutput)">
+            <summary>
+            Remove a local or remote ActorPort while Disconnecting.
+            </summary>
+            <param name="clt">the local WcfBasicClientAsync</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorInput.DisableRouterClient">
+            <summary>
+            Default = false. When set to true: Disable router client, no input of this application will publish its service name to the WcfRouter.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorInput.BasicService">
+            <summary>
+            When the input is linked to network, BasicService provides some informations about the WCF service.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorInput.MustOpenInput">
+            <summary>
+            When true: TryConnect() must be called (will open the service host)
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorInput.InputStateFromNetwork">
+            <summary>
+            <para>Gets or sets the state of the incoming connection from the network to the service.</para>
+            <para>May be called from any thread.</para>
+            <para>Setting InputStateFromNetwork to WcfState.Ok or WcfState.Connecting reconnects a previously disconnected link.</para>
+            <para>These states may be set only after an initial call to TryConnect from the actors internal thread.</para>
+            <para>Setting other states will disconnect the WCF service from network.</para>
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="E:SourceForge.AsyncWcfLib.ActorInput.OnInputConnected">
+            <summary>
+            The event is risen, when a client is connected to this service.
+            The response to the WcfReqIdent is sent by AsyncWcfLib. No further response is required. 
+            </summary>
+        </member>
+        <member name="E:SourceForge.AsyncWcfLib.ActorInput.OnInputDisconnected">
+            <summary>
+            The event is risen, when a client is disconnected from this service.
+            The response to the WcfReqIdent is sent by AsyncWcfLib. No further response is required. 
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorInput.OutstandingResponsesCount">
+            <summary>
+            Returns 0 for inputs.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.ActorInput`1">
+            <summary>
+            <para>This class represents an incoming connection from a client to an actor (service).</para>
+            <para>It is the destination of requests and contains additional data representing the session and the sending actor (client).</para>
+            </summary>
+            <typeparam name="TSC">Additional data (sender context) representing the communication session and the sending actor.</typeparam>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput`1.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler{`0})">
+            <summary>
+            Creates a ActorInput using a handler method with TSC object for each client.
+            </summary>
+            <param name="name">The application internal name of this service or client</param>
+            <param name="requestHandler">The method to be called when a request is received. See <see cref="T:SourceForge.AsyncWcfLib.WcfMessageHandler`1"/>.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput`1.OnConnectDisconnect(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            Message is passed to users connect/disconnect event handler.
+            </summary>
+            <param name="id">WcfReqIdent containing Message and Sender.</param>
+            <param name="msg">The message.</param>
+            <returns>True when handled.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorInput`1.OnDefaultInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Message is passed to users default handler.
+            </summary>
+            <param name="id">WcfReqIdent containing Message and Sender.</param>
+        </member>
+        <member name="E:SourceForge.AsyncWcfLib.ActorInput`1.OnInputConnected">
+            <summary>
+            The event is risen, when a client is connected to this service.
+            The response to the WcfReqIdent is sent by AsyncWcfLib. No further response is required. 
+            </summary>
+        </member>
+        <member name="E:SourceForge.AsyncWcfLib.ActorInput`1.OnInputDisconnected">
+            <summary>
+            The event is risen, when a client is disconnected from this service.
+            The response to the WcfReqIdent is sent by AsyncWcfLib. No further response is required. 
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.ActorOutput">
+            <summary>
+            <para>This class represents a communication partner (client).</para>
+            <para>It is the source of a request message and the destination of the response.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IActorOutput">
+            <summary>
+            The public output interface of an actor may be called from any thread.
+            The members of IActorPortId represent the actor sending the outgoing messages.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorOutput.LinkOutputTo(SourceForge.AsyncWcfLib.IActorInput)">
+            <summary>
+            Link to application-internal partner.
+            </summary>
+            <param name="output">a ActorInput</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorOutput.LinkOutputToRemoteService(System.String,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Add a WcfClientAsync and lookup the service Uri at WcfRouter.
+            WcfRouter may have synchronized its service register with peer routers on other hosts.
+            </summary>
+            <param name="serviceName">The unique service name to connect to.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.DoClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorOutput.LinkOutputToRemoteService(System.String,System.String,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Add a WcfClientAsync and lookup the service Uri at WcfRouter.
+            </summary>
+            <param name="routerHost">The hostname, where the WcfRouter runs.</param>
+            <param name="serviceName">The unique service name to connect to.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.DoClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IActorOutput.LinkOutputToRemoteService(System.Uri,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Add a WcfBasicClientAsync. No lookup at WcfRouter is needed as we know the TCP portnumber.
+            </summary>
+            <param name="serviceUri">The uri of the remote service.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.DoClientConfiguration.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.LastSentId">
+            <summary>
+            The send id given to the last message sent from this sender.
+            It is used to detect missing messages on the receiving side.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.LastRequestIdSent">
+            <summary>
+            The request id given to the last message sent from this client.
+            The request id is incremented by the client for each request.
+            The same id is returned in the response from the service.
+            It is used to detect programming erors leading to request/response mismatch.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.OutstandingResponsesCount">
+            <summary>
+            The number of requests not yet responded by the service connected to this output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.OutputSidePartner">
+            <summary>
+            OutputSidePartner is the identification of the partner that is linked to our output.
+            It returns null, as long as we are not linked (OutputState==WcfState.Unlinked).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.OutputClientId">
+            <summary>
+            The OutputClientId is used on the connected service to identify this client.
+            OutputClientId is generated by the service on first connect or service restart.
+            It remains stable on reconnect or client restart.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.OutputState">
+            <summary>
+            <para>Gets or sets the state of the outgoing connection.</para>
+            <para>May be called from any thread.</para>
+            <para>Setting OutputState to WcfState.Ok or WcfState.Connecting reconnects a previously disconnected link.</para>
+            <para>These states may be set only after an initial call to TryConnect from the active services internal thread.</para>
+            <para>Setting other states will disconnect the WCF client from network.</para>
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IActorOutput.TraceConnect">
+            <summary>
+            Trace switch: Traces connect/disconnect messages (not to the router), default = true.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler)">
+            <summary>
+            <para>Creates an output port for an actor.</para>
+            </summary>
+            <param name="name">The application internal name of this output port.</param>
+            <param name="defaultResponseHandler">The method to be called when a response is received and no other handler is applicatable.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandlerAsync)">
+            <summary>
+            <para>Creates an output port for an actor using async-await.</para>
+            </summary>
+            <param name="name">The application internal name of this output port.</param>
+            <param name="defaultMessageHandlerAsync">The awaitable method to be called when a response is received and no other handler is applicatable.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.#ctor">
+            <summary>
+            <para>Creates a client stub, used internally by a service.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.LinkOutputTo(SourceForge.AsyncWcfLib.IActorInput)">
+            <summary>
+            Link output to application-internal service.
+            </summary>
+            <param name="partner">a ActorInput</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.LinkOutputToRemoteService(System.String,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Link output to remote service. Look for the service Uri at WcfRouter on local host.
+            WcfRouter may have synchronized its service register with peer routers on other hosts.
+            </summary>
+            <param name="serviceName">The unique service name to connect to.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.Instance.DoClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.LinkOutputToRemoteService(System.String,System.String,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Link output to remote service. Look for the service Uri at WcfRouter on a remote host.
+            WcfRouter may have synchronized its service register with peer routers on other hosts.
+            </summary>
+            <param name="routerHost">The hostname, where the WcfRouter runs.</param>
+            <param name="serviceName">The unique service name.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.Instance.DoClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.LinkOutputToRemoteService(System.Uri,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Link output to remote service. No lookup at WcfRouter is needed as we know the romote host and the services TCP portnumber.
+            </summary>
+            <param name="serviceUri">The uri of the remote service.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.DoClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.TryConnect">
+            <summary>
+            'TryConnect' opens the outgoing connection to the previously linked partner.
+            The method is accessible by the owner of this ActorOutput object only. No interface exposes the method.
+            TryConnect picks up the synchronization context and must be called on the sending thread only!
+            The connect-process runs asynchronous and may involve an address lookup at the WcfRouter.
+            A WcfPartnerMessage is received, after the connection has been established.
+            A WcfErrorMessage is received, when the partner is not reachable.
+            </summary>
+            <returns>false, when the connect-process is not startable.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.Disconnect">
+            <summary>
+            Shutdown the outgoing connection. Send a disconnect message to the partner.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.SendOut(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Send a request message to the partner on the outgoing connection.
+            At least a WcfIdleMessage will asynchronously be received through 'PostInput', when the partner has processed the request.
+            Usage:
+            Clientside:  Send a request to the connected remote service.
+            Internal:    Send a message to the connected partner running on another thread synchronization context.
+            Serviceside: Sender.SendOut() sends a request from client-proxy to the internal service.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/>the 'Sender' property references the sending partner, where the response is expected.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.TryConnectAsync">
+            <summary>
+            VS2012 Version:
+            Asynchroniously connect the previously linked output.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.SendReceiveAsync(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            VS2012 Version:
+            Send a request message to the partner on the outgoing connection.
+            At least a WcfIdleMessage will asynchronously be received and passed to the Task-return value.
+            </summary>
+            <param name="request">The message to send.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.SendOut(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Send a request message to the partner on the outgoing connection.
+            At least a WcfIdleMessage will asynchronously be received through 'PostInput', after the partner has processed the request.
+            </summary>
+            <param name="msg">The message to send.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput.SendOut(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)">
+            <summary>
+            Send a request message to the partner on the outgoing connection.
+            At least a WcfIdleMessage will asynchronously be received in responseHandler.
+            </summary>
+            <param name="msg">The message to send.</param>
+            <param name="responseHandler">A method or lambda expression handling the asynchronous response.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.IsOutputConnected">
+            <summary>
+            When true: Sending of requests is possible
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.MustConnectOutput">
+            <summary>
+            When true: TryConnect() must be called (first connect or reconnect)
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.OutputSidePartner">
+            <summary>
+            OutputSidePartner is an IActorPortId interface to the service (or its proxy) that is linked to this output.
+            It returns null, as long as we are not linked (OutputState==WcfState.Unlinked).
+            It is used to return identification data like Uri, AppVersion... (see IActorPortId).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.OutputClientId">
+            <summary>
+            The OutputClientId used on the connected service to identify this client.
+            OutputClientId is generated by the service on first connect or service restart.
+            It remains stable on reconnect or client restart.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.OutputState">
+            <summary>
+            <para>Gets or sets the state of the outgoing connection.</para>
+            <para>May be called from any thread.</para>
+            <para>Setting OutputState to WcfState.Ok or WcfState.Connecting reconnects a previously disconnected link.</para>
+            <para>These states may be set only after an initial call to TryConnect from the active services internal thread.</para>
+            <para>Setting other states will disconnect the WCF client from network.</para>
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput.OutstandingResponsesCount">
+            <summary>
+            The number of requests not yet responded by the service connected to this output.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.ActorOutput`1">
+            <summary>
+            <para>This class represents an outgoing (client) connection to an actor (service).</para>
+            <para>It is the destination of responses and contains additional data representing the session and the remote service.</para>
+            </summary>
+            <typeparam name="TOC">Additional data (output context) representing the communication session and the remote service.</typeparam>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput`1.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler{`0})">
+            <summary>
+            <para>Creates an output port for an actor.</para>
+            </summary>
+            <param name="name">The application internal name of this output port.</param>
+            <param name="defaultTocResponseHandler">The method to be called when a response is received and no other handler is applicatable. May be null.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.ActorOutput`1.OnDefaultInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Message is passed to users default handler.
+            </summary>
+            <param name="id">WcfReqIdent containing Message and Sender.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.ActorOutput`1.OutputContext">
+            <summary>
+            <para>OutputContext is an object of type TOC defined by the application.</para>
+            <para>The OutputContext is not sent over the network.</para>
+            <para>The OutputContext remains untouched by the library. The application may initialize and use it.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfBasicContractSync">
+            <summary>
+            Synchronous interface, normally used on service side
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicContractSync.WcfRequest(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.WcfReqIdent@)">
+            <summary>
+            Synchronious send a request to a service.
+            </summary>
+            <param name="msg">The request message.</param>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <returns>The response message.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfBasicContractAsync">
+            <summary>
+            <para>Asynchronous interface, seldom used on service side.</para>
+            <para>                        similar to the generated client side.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicContractAsync.BeginWcfRequest(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.WcfReqIdent@,System.AsyncCallback,System.Object)">
+            <summary>
+            Handle a request on a service.
+            </summary>
+            <param name="msg">Request message.</param>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <param name="callback">Delegate to call on service side, when request has been handled on service.</param>
+            <param name="asyncState">User state.</param>
+            <returns>IAsyncResult to handle the Microsoft async pattern.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfBasicContractAsync.EndWcfRequest(SourceForge.AsyncWcfLib.WcfReqIdent@,System.IAsyncResult)">
+            <summary>
+            Wait for asynchronous completion of a thread started with BeginWcfRequest.
+            </summary>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <param name="result">IAsyncResult to handle the Microsoft async pattern.</param>
+            <returns>Response message.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfDualContractSync">
+            <summary>
+            <para>Synchronous interface with callback, seldom used on service side.</para>
+            <para>Needs wsDualHttpBinding.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfDualContractSync.WcfRequest(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.WcfReqIdent@)">
+            <summary>
+            Handle a request on a service.
+            </summary>
+            <param name="msg">Request message.</param>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <returns>Response message.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfDualContractAsync">
+            <summary>
+            <para>Asynchronous interface with callback, seldom used on service side.</para>
+            <para>Needs wsDualHttpBinding. Similar to the generated client side.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfDualContractAsync.BeginWcfRequest(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.WcfReqIdent@,System.AsyncCallback,System.Object)">
+            <summary>
+            Handle a request on a service.
+            </summary>
+            <param name="msg">Request message.</param>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <param name="callback">Delegate to call on service side, when request has been handled on service.</param>
+            <param name="asyncState">User state.</param>
+            <returns>IAsyncResult to handle the Microsoft async pattern.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfDualContractAsync.EndWcfRequest(SourceForge.AsyncWcfLib.WcfReqIdent@,System.IAsyncResult)">
+            <summary>
+            Wait for asynchronous completion of a thread started with BeginWcfRequest.
+            </summary>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <param name="result">IAsyncResult to handle the Microsoft async pattern.</param>
+            <returns>Response message.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.IWcfDualCallbackContract">
+            <summary>
+            <para>Callback interface, used for service notifications to the client.</para>
+            <para>Needs wsDualHttpBinding. Asynchronous implementation, otherwise service may block, when client has disappeared.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfDualCallbackContract.BeginOnWcfNotificationFromService(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.WcfReqIdent@,System.AsyncCallback,System.Object)">
+            <summary>
+            Handle a unrequested message from a service on the client.
+            </summary>
+            <param name="notification">Unrequest message.</param>
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            <param name="callback">Delegate to call on service side, when notification has been handled on client.</param>
+            <param name="asyncState">User state.</param>
+            <returns>IAsyncResult to handle the Microsoft async pattern.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.IWcfDualCallbackContract.EndOnWcfNotificationFromService(SourceForge.AsyncWcfLib.WcfReqIdent@,System.IAsyncResult)">
+            <summary>
+            Wait for asynchronous completion of a thread started with BeginOnWcfNotificationFromService.
+            <param name="id">Internally used identification info for a request (received and returned).</param>
+            </summary>
+            <param name="result">IAsyncResult to handle the Microsoft async pattern.</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait">
+            <summary>
+            VS2012 extension to WcfBasicClientAsync. Supporting async / await.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync">
+            <summary>
+            <para>Base class of WcfClientAsync to connect to a WCF service.</para>
+            <para>Requests are sent asynchronious.</para>
+            <para>Responses are asynchroniously received on the same thread as the request was sent</para>
+            <para>(only when sent from a thread with message queue (as WinForms), but not when sent from a threadpool-thread).</para>
+            <para>This class uses a auto-generated service reference 'WcfBasicClient'.</para>
+            <para>TSC is the TypeofUserContext in ClientIdent and ServiceIdent.</para>
+            <para>We accept only reference types as TSC. This allows to modify user context when receiving a message.</para>
+            <para>Specify WcfBasicClientAsync&lt;object>, when you do not need the user context.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.LastRequestIdReceived">
+            <summary>
+            The last request id received in a response from the connected service.
+            It is used to calculate outstandig responses.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.LastSendIdReceived">
+            <summary>
+            The last send id received in a response from the connected service.
+            It is used to detect missing messages from a remote service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_ServiceReference">
+            <summary>
+            Auto-generated class from WcfRouterService - mex endpoint. Used when opening the connection.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_boTimeout">
+            <summary>
+            <para>Set m_boTimeout to true, when the connect operation fails or some errormessages are received.</para>
+            <para>Sets the client into Fault state.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_ServiceNameToLookup">
+            <summary>
+            The original service name (unique in plant), not the router.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_RequestedServiceUri">
+            <summary>
+            URI of next service to connect, can be the router.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_WcfClientConfig">
+            <summary>
+            The plugin provided by the library user or WcfDefault.ClientConfiguration
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_boTemporaryRouterConn">
+            <summary>
+            True, when connecting or connected to router, not to the original service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_boConnecting">
+            <summary>
+            True, when connecting and not yet connected.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_addressesTried">
+            <summary>
+            The number of addresses tried to connect already.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_addressNumber">
+            <summary>
+            The tried address. 0 = hostname, 1 = first IP address, AddressList.Count = last IP address.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_boFirstResponseReceived">
+            <summary>
+            True, when first response from original service received.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_DefaultInputHandlerForApplication">
+            <summary>
+            The default message handler to use, when connected to the target service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_RouterHostToLookup">
+            <summary>
+            The hostname of the router.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_WcfRouterPort">
+            <summary>
+            The TCP port of the router.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.m_TraceConnectBefore">
+            <summary>
+            True, when traces of the connect process to the target service should be written.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.#ctor(System.String,SourceForge.AsyncWcfLib.WcfMessageHandler)">
+            <summary>
+            Create the proxy for a remote service.
+            </summary>
+            <param name="clientName">Unique identification of the client inside an application.</param>
+            <param name="defaultResponseHandler">The method to be called for responses that have not otherwise been handled.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.#ctor(SourceForge.AsyncWcfLib.ActorOutput)">
+            <summary>
+            Create the proxy for a remote service.
+            </summary>
+            <param name="clientIdent">Link this ActorOutput to the remote service.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.LinkToService(System.Uri,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            Link this ClientIdent to a remote service. No lookup at WcfRouter is needed as we know the TCP portnumber.
+            </summary>
+            <param name="serviceUri">The uri of the remote service.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.ClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.DoClientConfiguration(System.Uri@,System.Boolean)">
+            <summary>
+            Accept the binding configuration provided when linking the ActorOutput or set in WcfDefault.ClientConfiguration.
+            </summary>
+            <param name="serviceUri">The URI to connect to. Parts of the URI may be changed depending on the binding configuration.</param>
+            <param name="forRouter">True, when the connection is to a WcfRouter.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.LinkToService(System.String,System.String,SourceForge.AsyncWcfLib.IWcfClientConfiguration)">
+            <summary>
+            <para>Connect this Client to a service identified by the serviceName parameter.</para>
+            <para>The correct serviceHost and TCP port will be looked up at a WcfRouterService identified by parameter routerHost.</para>
+            </summary>
+            <param name="routerHost">The HostName, where the WcfRouterService is running. This may be the 'localhost'.
+               <para>By default TCP port 40000 is used for WcfRouterService, but you can specify another TCP port for the router eg. "host:3333"</para></param>
+            <param name="serviceName">A unique name of the service. This service may run on any host that has been registered at the WcfRouterService.</param>
+            <param name="clientConfig">Plugin your own client configuration instead of WcfDefault.ClientConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.TryConnectConfiguredEndpoint">
+            <summary>
+            <para>Connect this client to a service, using the ClientName for endpoint name entry in App.config file </para>
+            <para>as in:</para>
+            <para>(system.serviceModel></para>
+            <para>  (client></para>
+            <para>    (endpoint address="http://localhost:40000/AsyncWcfLib/RouterService/"</para>
+            <para>      binding="basicHttpBinding" bindingConfiguration="" contract="AsyncWcfLib.ClientContract"</para>
+            <para>      name="RouterClient"></para>
+            <para>    (/endpoint></para>
+            <para>  (/client></para>
+            <para>(/system.serviceModel></para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.TryConnectVia(System.Uri,SourceForge.AsyncWcfLib.WcfMessageHandler,System.Boolean)">
+            <summary>
+            <para>Connect this client to a router or to the requested service, without configuration from App.config file.</para>
+            </summary>
+            <param name="endpointUri">fully specified URI of the service</param>
+            <param name="viaResponseHandler">The callback method when a response arrives</param>
+            <param name="toRouter">True, when the connection to a router is made.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.Dispose">
+            <summary>
+            Same as Disconnect.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.Disconnect">
+            <summary>
+            <para>Send Disconnect messages to service if possible . Go from any state to Disconnected state.</para>
+            <para>Makes it possible to restart the client with TryConnect.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.SendDisconnectMessage">
+            <summary>
+            internal: Overloaded by ClientAsyncAwait
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.AbortCommunication">
+            <summary>
+            <para>Abort all messages, go from any state to Disconnected state.</para>
+            <para>Makes it possible to restart the client with TryConnect.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.TraceState(System.String)">
+            <summary>
+            Trace internal state of this client
+            </summary>
+            <param name="mark">6 char mark: Opened, Abortd, ...</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.OpenConnectionToService">
+            <summary>
+            Connect this Client to the prepared m_ServiceReference
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.GetSetServiceAddress">
+            <summary>
+            Called before opening a connection. Prepares endpointaddress for tracing.
+            </summary>
+            <returns>string representation of the endpoint address.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.OnWcfNotificationFromService(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.WcfMessageHandler)">
+            <summary>
+            Handling of unexpected notification messages (not requested messages).
+            </summary>
+            <param name="notification">The unexpected message.</param>
+            <param name="responseHandler">The application message handler for unexpected messages.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.CheckResponse(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.WcfReqIdent,System.Boolean)">
+            <summary>
+            This function is normally only used internally by OnRequestCompleted. It checks whether the response has to be handled by application code.
+            </summary>
+            <param name="result">received response</param>
+            <param name="req">original request containing response handlers</param>
+            <param name="cancelled">handshake has been aborted</param>
+            <returns>null if response has been handled internally, !null, when response must be handled by application</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.TryConnect">
+            <summary>
+            Connect or reconnect output to the previously linked partner.
+            </summary>
+            <returns>false, when the connection may not be started.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.PostInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Post a request to the input of the remote partner. It will be sent over the network.
+            Called from ClientIdent, when SendOut a message to remote partner.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/></param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.SendOut(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            the intuitive action is to send the message to remote service.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/></param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.SendOut(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            <para>Send a message to the service. Do not wait here for the response.</para>
+            <para>The OnWcfMessageReceivedDelegate is called on the same thread,</para>
+            <para>when a response or errormessage arrives or a timeout has passed.</para>
+            </summary>
+            <param name="request">The message to send.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.SendOut(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)">
+            <summary>
+            <para>Send a message to the service. Do not wait here for the response.</para>
+            <para>The response is asynchronously passed to the extension method "On", normally used as asyncResponseHandler.</para>
+            <para>If the sending thread has a message queue, the response is executed by the same thread as the send operation was.</para>
+            <para>If the response could not be handled by the On-extension methods, the default OnWcfMessageReceivedDelegate passed to TryConnect() is called.</para>
+            <para>Example:</para>
+            <para>Send (request, rsp =&gt; rsp.On&lt;WcfIdleMessage&gt;(idle =&gt; {do something with idle message 'idle'})</para>
+            <para>.On&lt;WcfErrorMessage&gt;(err =&gt; {do something with error message 'err'}));</para>
+            </summary>
+            <param name="request">The message to send.</param>
+            <param name="asyncResponseHandler"><see cref="M:SourceForge.AsyncWcfLib.WcfExtensionMethods.On``1(SourceForge.AsyncWcfLib.WcfReqIdent,System.Action{``0})"/></param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.ClientIdent">
+            <summary>
+            Detailed information about this client. May be a ActorOutput&lt;TOC&gt; object containing application specific "OutputContext".
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.ServiceIdent">
+            <summary>
+            Detailed information about the connected service. Contains a "UserContext" object for free use by the client application.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.IsConnected">
+            <summary>
+            A client is connected after the ServiceConnectResponse has been received.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.IsDisconnected">
+            <summary>
+            A client is disconnected after construction, after a call to Disconnect() or AbortCommunication()
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.IsFaulted">
+            <summary>
+            A client is in Fault state when a connection cannot be kept open or a timeout has passed.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.OutstandingResponsesCount">
+            <summary>
+            Returns the number of requests that have not received a response by the service.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.OutputState">
+            <summary>
+            Gets or sets the state of the outgoing connection. May be called on any thread.
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync.Uri">
+            <summary>
+            Gets the Uri of a linked service.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.TryConnect">
+            <summary>
+            Asynchronious connect using async / await. 
+            </summary>
+            <returns>True, when connect process could be started.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.TryConnectAsync">
+            <summary>
+            Connect or reconnect output to the previously linked partner.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.TryConnectViaAsync(System.Uri,SourceForge.AsyncWcfLib.WcfMessageHandler,System.Boolean)">
+            <summary>
+            <para>Connect this client to a router or to the requested service, without configuration from App.config file.</para>
+            </summary>
+            <param name="endpointUri">fully specified URI of the service</param>
+            <param name="viaResponseHandler">The callback method when a response arrives, null for async/await semantics</param>
+            <param name="toRouter">True, when the connection to a router is made.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.OpenConnectionToServiceAsync">
+            <summary>
+            Connect this Client to the prepared m_ServiceReference
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.SendDisconnectMessage">
+            <summary>
+            internal: Send disconnect message, wait only 30ms for a response.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.PostInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Entrypoint of messages sent conventional. Now interfacing to async/await semantics.
+            </summary>
+            <param name="id">Message to send + responsehandler</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsyncAwait.SendReceiveAsync(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Asynchronous sending and receiving a message using async/await semantics.
+            </summary>
+            <param name="id">The request identifier, contains the request and the response.</param>
+            <returns>The request identifier, contains the response.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfPartnerListMessage">
+            <summary>
+            <para>This message contains a list of WcfPartnerMessages.</para>
+            <para>It is used by the routers to exchange informations.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfMessage">
+            <summary>
+            <para>Base class for all messages sent through AsyncWcfLib.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IWcfMessage">
+            <summary>
+            Represents the base type for all  messages sent through AsyncWcfLib.
+            The interface exists to find all message implementations in a project.
+            The interface itself does not declare any constraints on your message implementation.
+            It is your own responsibility to design the message for immutability by multiple threads when needed.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IExtensibleWcfMessage">
+            <summary>
+            Represents the interface used for the base message class WcfMessage.
+            It is provided for library users wishing to write their own base message implementation.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IExtensibleWcfMessage.BoundSyncContext">
+            <summary>
+            This SynchronizationContext is currently allowed to modify the message members. 
+            The value is automatically set by AsyncWcfLib.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IExtensibleWcfMessage.IsSent">
+            <summary>
+            True, when a message has been sent and the BoundSyncContext has to match the current SynchronizationContext in order to be allowed to modify message members.
+            The value is automatically set by AsyncWcfLib.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IExtensibleWcfMessage.IsThreadSafe">
+            <summary>
+            Returns true, when the message is safe for read and write by an Actor in its own SyncronizationContext.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfMessage.AddBasicMessageType(System.Type)">
+            <summary>
+            <para>AddBasicMessageType must be called to register a basic message directly derieved from IWcfMessage or IExtensibleWcfMessage.</para>
+            <para>The type WcfMessage is such an example, it is registered by the library internally.</para>
+            </summary>
+            <param name="wcfMessageType">A basic message type used in WCF communication</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfMessage.AddKnownType(System.Type)">
+            <summary>
+            <para>AddKnownType must be called to register all known WCF message types derieved from a registered, basic message type.</para>
+            <para>It is recommended to register all messages of an assembly during assembly initialization.</para>
+            <para>The types of AsyncWcfLib are registered internally.</para>
+            </summary>
+            <param name="wcfMessageType">A message type used in WCF communication</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfMessage.z_GetServiceKnownTypes(System.Reflection.ICustomAttributeProvider)">
+            <summary>
+            This method is used internally only. In order to run under partial trust it probably must be public.
+            (http://msdn.microsoft.com/en-us/library/bb412186%28v=VS.100%29.aspx)
+            </summary>
+            <returns>A list of known message types for the ServiceContractResolver.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfMessage.z_GetKnownTypeList">
+            <summary>
+            This method is used internally only. In order to run under partial trust it probably must be public.
+            (http://msdn.microsoft.com/en-us/library/bb412186%28v=VS.100%29.aspx)
+            </summary>
+            <returns> A list of known message types for the DataContractSerializer.</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfMessage.CifAssembly">
+            <summary>
+            The assembly containing this message definition.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfMessage.ExtensionData">
+            <summary>
+            <para>Each WCF message may contain more data than the receiver has expected.</para>
+            <para>This normally happens when the senders version is newer than the receivers version.</para>
+            <para>Some data cannot be deserialized at the receiver. WCF provides this object to store this extension data.</para>
+            <para>When serializing this message again (gateway functionality) the extension data is included and not lost.</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfMessage.BoundSyncContext">
+            <inheritdoc/>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfMessage.IsSent">
+            <inheritdoc/>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfMessage.IsThreadSafe">
+            <inheritdoc/>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfPartnerListMessage.Item">
+            <summary>
+            List of services in a plant.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfPartnerListMessage.#ctor">
+            <summary>
+            Create a WcfPartnerListMessage.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfNotifyResponse">
+            <summary>
+            <para>A service may send a 'WcfNotifyResponse' instead of a normal response.</para>
+            <para>The 'WcfNotifyResponse' contains the normal response plus some messages not expected by the client.</para>
+            <para>This is a polling type replacement of the more cumbersome 'DualHttpBinding'.</para>
+            <para>This message is used internally and returned by calling 'WcfBasicServiceUser.NotificationsAndResponse(rsp)'.</para>  
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfNotifyResponse.Notifications">
+            <summary>
+            The notification messages not requested by the client are received first.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfNotifyResponse.Response">
+            <summary>
+            The message requested by the client is received last.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfNotifyResponse.#ctor">
+            <summary>
+            Create an empty notify message
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IWcfDefault">
+            <summary>
+            Common definitions for all interacting actors.
+            Library users may plug in their own implementation of this class to WcfDefault.Instance.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IWcfServiceConfiguration">
+            <summary>
+            The configuration interface is implemented by WcfDefault. It may be provided by the library user.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IWcfServiceConfiguration.DoServiceConfiguration(System.ServiceModel.ServiceHost,System.Uri@,System.Boolean)">
+            <summary>
+            Sets the service configuration, when no endpoint in app.config is found.
+            </summary>
+            <param name="serviceHost">The ServiceHost to add the endpoint with security credentials.</param>
+            <param name="uri">The dynamically generated URI for this service.</param>
+            <param name="isRouter">true if used for WcfRouter service.</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.IWcfClientConfiguration">
+            <summary>
+            The configuration interface is implemented by WcfDefault. It may be provided by the library user.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IWcfClientConfiguration.DoClientConfiguration(System.ServiceModel.ClientBase{SourceForge.AsyncWcfLib.Basic.IWcfBasicContractSync},System.Uri@,System.Boolean)">
+            <summary>
+            Sets the default client configuration, when connecting without app.config. Must match to ServiceConfiguration of the connected service.
+            </summary>
+            <param name="clientBase">The ClientBase object to modify the endpoint and security credentials.</param>
+            <param name="uri">The endpoint URI to connect.</param>
+            <param name="forRouter">true if used for WcfRouter service.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IWcfDefault.IsAppIdUniqueInPlant(System.Int32)">
+            <summary>
+            Library users may change here whether an application instance is unique in plant or on host.
+            Applications with unique id in plant may be moved from one host to another without configuration change.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IWcfDefault.IsProcessIdUsed(System.Int32)">
+            <summary>
+            When ApplicationInstance remains 0, the operating system process id is used as a application instance id for communication and trace.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.IWcfDefault.GetAppIdentification(System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            The AppIdentification is composed from AppName, HostName, AppInstance and processId to for a unique string
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.RouterPort">
+            <summary>
+            The WcfRouter service listens on this port. The WcfRouter must be running on every host having services.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.RouterServiceName">
+            <summary>
+            The WcfRouter service listens on this name.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.ApplicationName">
+            <summary>
+            the name of this application is used for tracing and for identifying an ActorOutput
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.ApplicationVersion">
+            <summary>
+            The version of this application is used for information in ActorPort
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.ApplicationInstance">
+            <summary>
+            Library users may change here how to get an application instance id.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.ProcessId">
+            <summary>
+            Common application info: Operating system process id
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.AppIdentification">
+            <summary>
+            The unique AppIdentification for this application instance
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.IWcfDefault.TraceFolder">
+            <summary>
+            Get the folder name where tracefiles may be stored. 
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfApplication">
+            <summary>
+            Static members to handle application start and shutdown in a compatible way.
+            Supports Microsoft and Linux operating systems.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.ServiceName">
+            <summary>
+            Set when running as Windows service.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfApplication.WinForms_ThreadException(System.Object,System.Threading.ThreadExceptionEventArgs)">
+            ---------------------------------------------------
+             <summary>
+             Handle the UI exceptions by showing a dialog box, and asking the user whether
+             or not they wish to abort execution.
+            
+             Before 'Application.Run' add the event handler for handling UI thread exceptions: 
+               Application.ThreadException += new ThreadExceptionEventHandler(WcfTrc.DefaultTracePlugin.WinForms_ThreadException);
+             Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
+               Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+             </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfApplication.CurrentDomain_UnhandledException(System.Object,System.UnhandledExceptionEventArgs)">
+            --------------------------------------------------------------------------
+             <summary>
+             Handle the non-UI exceptions by showing a dialog box, and asking the user whether
+             or not they wish to abort execution.
+             NOTE: This exception cannot be kept from terminating the application - it can only 
+             log the event, and inform the user about it.
+             
+             Before 'Application.Run' add the handler for handling non-UI thread exceptions to the event:
+               AppDomain.CurrentDomain.UnhandledException 
+                 += new UnhandledExceptionEventHandler(WcfTrc.DefaultTracePlugin.CurrentDomain_UnhandledException);
+             </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfApplication.InstallExitHandler">
+            <summary>
+            Install handlers for normal or abnormal application termination on Windows or Unix.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfApplication.Exit(System.Int32)">
+            <summary>
+            Normal application end.
+            </summary>
+            <param name="exitCode">the code returned by an application, 0=success, 1=failure</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfApplication.ExecutablePath">
+            <summary>
+            Same as Windows.Forms.Application.ExecutablePath
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfApplication.Logger">
+            <summary>
+            Set your logging object here (null by default).
+            It is passed to the logging methods of WcfTrc.ITracePlugin.
+            You will use it when writing your own adapter class based on WcfTrc.ITracePlugin.
+            The adapter class is needed to redirect trace output to your own logging/tracing framework.
+            </summary>
+        </member>
+        <member name="E:SourceForge.AsyncWcfLib.WcfApplication.ApplicationExit">
+            <summary>
+            Event is raised for cleanup on application end.
+            Environment.ExitCode must be set to 0 when application ends successful.
+            Environment.ExitCode has been initialized to 1, indicating an application failure.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfApplication.IsRunningWithMono">
+            <summary>
+            returns true, when running with mono framework instead of Mocrosoft .NET (on Windows or Unix)
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfApplication.ExitHandler">
+            <summary>
+            The eventhandler type raised at application end.
+            </summary>
+            <param name="closeType">Application close reason</param>
+            <param name="goExit">May be set to true in order to terminate an application interrupted by CTRL+C. Is already true, when the application may not be continued.</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfApplication.CloseType">
+            <summary>
+            An enumerated type sent to the ApplicationExit handler.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.CtrlC">
+            <summary>
+            CTRL+C Key pressed on Windows console or Unix terminal. Default is application continuation.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.CtrlBreak">
+            <summary>
+            Windows only: CTRL+BREAK Key pressed, default is application continuation.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.CloseEvent">
+            <summary>
+            Hosting Windows console or Unix terminal is closed or process is stopped from task manager or system monitor. Application must exit.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.LogoffEvent">
+            <summary>
+            Windows only: User logs off. Application must exit.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.ShutdownEvent">
+            <summary>
+            Windows only: System shutdown. Application must exit.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.ApplicationEnd">
+            <summary>
+            Programmed application exit.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfApplication.CloseType.ApplicationError">
+            <summary>
+            Application exit after unhandled exception. User may have choosen to exit the application (Windows or Unix).
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfBasicService">
+            <summary>
+            <para>Class used on WCF service side, base of WcfServiceAssistant.</para>
+            <para>Handles and stores all connected clients.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicService.LastAction">
+            <summary>
+            May be used for tracing of connect/reconnect/disconnect operations.
+            </summary>L
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicService.HasConnectionStateChanged">
+            <summary>
+            True if any client has been connected or disconnected. Set to false by DoPeriodicTasks()
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicService.IsServiceRegistered">
+            <summary>
+            Internally used by RouterClient
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicService.NextEnableMessage">
+            <summary>
+            Internally used for periodic message to WcfRouterService
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.#ctor(SourceForge.AsyncWcfLib.ActorInput,System.Int32,System.Int32)">
+            <summary>
+            Create a WcfBasicService object
+            </summary>
+            <param name="serviceIdent">a ActorInput having a unique name for the service.</param>
+            <param name="firstClientId">client Id's start with this number, normally = 1.</param>
+            <param name="maxClients">initial capacity of the User List.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.#ctor(System.String,System.Uri,System.Int32,System.Int32)">
+            <summary>
+            Create a WcfBasicService object, used by AsyncWcfRouter (only).
+            </summary>
+            <param name="serviceName">a unique service name.</param>
+            <param name="serviceUri">the Uri for the service.</param>
+            <param name="firstClientId">client Id's start with this number, normally = 1.</param>
+            <param name="maxClients">initial capacity of the User List.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.Disconnect">
+            <summary>
+            <para>Shutdown this service and release all attached resources in subclasses</para>
+            <para>(e.g. ServiceHost, RouterClient + WcfRouterService entry)</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.AbortUserNotificationChannels">
+            <summary>
+            <para>Abort all notification connections, do not send any messages.</para>
+            <para>Should be called before closing the service host.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.ConnectPartner(SourceForge.AsyncWcfLib.WcfPartnerMessage,SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser@)">
+            <summary>
+            Connect / Reconnect a client to this service
+            </summary>
+            <param name="client">Request message</param>
+            <param name="req">the WcfReqIdent to be used for responses.</param>
+            <param name="svcUser">Output the user object containing a "ClientIdent.UserContext" object for free application use</param>
+            <returns>Service info as response</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.DisconnectPartner(SourceForge.AsyncWcfLib.WcfPartnerMessage,SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser@)">
+            <summary>
+            Mark a client as (currently) disconnected
+            </summary>
+            <param name="client">Request message</param>
+            <param name="req">the WcfReqIdent to be used for responses.</param>
+            <param name="svcUser">Output the user object containing a "ClientIdent.UserContext" object for free application use</param>
+            <returns>Service info as response</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.FindPartnerAndCheck(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser@)">
+            <summary>
+            Set client info into the message, call it once for each request to check the connection.
+            </summary>
+            <param name="req">Request message</param>
+            <param name="svcUser">Output the user object containing a "ClientIdent.UserContext" object for free application use.</param>
+            <returns>True, when the client has been found. False, when no client has been found and an error message must be generated.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.CheckBasicResponse(SourceForge.AsyncWcfLib.WcfReqIdent,SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser@)">
+            <summary>
+            Check if response can be generated by library or if an application message is required.
+            </summary>
+            <param name="req">The WcfReqIdent contains the request. It is used for the response also.</param>
+            <param name="svcUser">output the user object containing a "ClientIdent.SenderContext" object for free application use</param>
+            <returns><para> null when the response has to be generated by the application.</para>
+                     <para>!null if the response already has been generated by this class.</para></returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicService.DoPeriodicTasks">
+            <summary>
+            <para>Check client connection-timeouts, should be called periodically.</para>
+            </summary>
+            <returns>True, when a client state has changed</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicService.ServiceIdent">
+            <summary>
+            Detailed information about this service
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicService.ClientCount">
+            <summary>
+            The count of known clients of this service (connected or disconnected)
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicService.ConnectedClientCount">
+            <summary>
+            The count of connected clients of this service
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicService.DisableRouterClient">
+            <summary>
+            Default = false. When set to true: Disable router client, no service in this application will be published to the WcfRouter.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfBasicClient">
+            <summary>
+            The service interface is used internally. It must be public in order to access ClientBase&lt;IWcfBasic>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser">
+            <summary>
+            <para>Class used on WCF service side.</para>
+            <para>Represents a connected client.</para>
+            <para>Has the possibility to store and forward notifications that are not expected by the client.</para>
+            <para>This could also be handled by the more cumbersome 'DualHttpBinding'.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.ChannelTestTimer">
+            <summary>
+            Set to 0 when a message has been received or sent. Incremented by milliseconds in TestNotificationChannel().
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.#ctor(SourceForge.AsyncWcfLib.ActorOutput,System.Int32)">
+            <summary>
+            Internally called to create a WcfBasicServiceUser object
+            </summary>
+            <param name="clientIdent">client using this service</param>
+            <param name="clientId">client id used for this client on this service.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.Disconnect">
+            <summary>
+            Shutdown the outgoing connection. Send a disconnect message to the partner.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.OpenNotificationChannel">
+            <summary>
+            Internally called on client connect or reconnect
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.TraceState(System.String)">
+            <summary>
+            Trace internal state of the client connection to this service
+            </summary>
+            <param name="mark">6 char, eg. 'Connec', 'Discon', 'Abortd'</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.TestChannel(System.Int32)">
+            <summary>
+            Internally called by DoPeriodicTasks(), notifies idle messages and disconnects the client connection in case of failure.
+            </summary>
+            <returns>True, when connection state has changed.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.AbortNotificationChannel">
+            <summary>
+            Internally called on service shutdown or timeout on notification channel
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.SendNotification(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            <para>Call SendNotification(...) to enqueue a notification message.</para>
+            <para>All queued messages are added to the next response by NotificationsAndResponse().</para>
+            </summary>
+            <param name="notification">a message not requested by the client</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.GetNotificationsAndResponse(SourceForge.AsyncWcfLib.WcfReqIdent@)">
+            <summary>
+            <para>GetNotificationsAndResponse() returns a message of type 'WcfNotifyResponse' when  notification messages are queued.</para>
+            <para>It must be called to return the response by the service.</para>
+            </summary>
+            <returns>The responses plus notifications.</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.TryConnect">
+            <summary>
+            Dummy implementation. Client stub is always connected to the service.
+            </summary>
+            <returns>true</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.SendOut(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Send a request to the service internally connected to this client-stub.
+            </summary>
+            <param name="id">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/>the 'Sender' property references the sending partner, where the response is expected.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.PostInput(SourceForge.AsyncWcfLib.WcfReqIdent)">
+            <summary>
+            Send a response to the remote client belonging to this client-stub.
+            </summary>
+            <param name="rsp">A <see cref="T:SourceForge.AsyncWcfLib.WcfReqIdent"/>the 'Sender' property references the sending partner, where the response is expected.</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.ClientIdent">
+            <summary>
+            <para>Detailed information about the client using this service.</para>
+            <para>Contains the "UserContext" object that may be used freely by the service application.</para>
+            <para>Output is linked to this service.</para>
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.ClientId">
+            <summary>
+            The ClientId used on this service.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.IsConnected">
+            <summary>
+            Is the client connected ?
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.IsNotificationChannelOk">
+            <summary>
+            Is the client connected and is no error on the notification channel ?
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.IsFaulted">
+            <summary>
+            Was there an error that disconnected the client ?
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.ClientMark">
+            <summary>
+            Used for tracing messages from/to this client.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.OutstandingResponsesCount">
+            <summary>
+            Returns the number of notification responses, that have not been sent yet.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfBasicServiceUser.Uri">
+            <summary>
+            Gets the Uri of a linked client.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfDefault">
+            <summary>
+            Common definitions for all interacting actors.
+            Library users may plug in their own implementation of this class to WcfDefault.Instance.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfDefault.WsNamespace">
+            <summary>
+            The Webservice communication namespace is used by clients and services to uniquely identify services.
+            Library users may change this constant to e.g. "YourCompany.com/YourProduct" and rebuild AsyncWcsLib.
+            Sorry, currently it seems there is no other possibility to set your own namespace !
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.#ctor">
+            <summary>
+            When the Library users does not plug in its own implementation of IWcfDefault, WcfDefault will be used.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.GetDefaultBinding(System.Uri@,System.Boolean)">
+            <summary>
+            Returns the default binding, used by services and clients.
+            URI may be changed e.g. from http:// to https://
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.DoServiceConfiguration(System.ServiceModel.ServiceHost,System.Uri@,System.Boolean)">
+            <summary>
+            Sets the default service configuration, when no endpoint in app.config is found.
+            </summary>
+            <param name="serviceHost">The ServiceHost to add the endpoint with security credentials.</param>
+            <param name="uri">The dynamically generated URI for this service.</param>
+            <param name="isRouter">true if used for WcfRouter service.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.DoClientConfiguration(System.ServiceModel.ClientBase{SourceForge.AsyncWcfLib.Basic.IWcfBasicContractSync},System.Uri@,System.Boolean)">
+            <summary>
+            Sets the default client configuration, when connecting without app.config.
+            </summary>
+            <param name="clientBase">The ClientBase object to modify the endpoint and security credentials.</param>
+            <param name="uri">The endpoint URI to connect.</param>
+            <param name="forRouter">true if used for WcfRouter service.</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfDefault.m_appAssembly">
+            <summary>
+            The assembly that represents the application.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.IsAppIdUniqueInPlant(System.Int32)">
+            <summary>
+            Library users may change here whether an application instance is unique in plant or on host.
+            Applications with unique id in plant may be moved from one host to another without configuration change.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.IsProcessIdUsed(System.Int32)">
+            <summary>
+            When ApplicationInstance remains 0, the operating system process id is used as a application instance id for communication and trace.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfDefault.m_ProcId">
+            <summary>
+            Operating system process id of this application.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.GetAppIdentification(System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            The AppIdentification is composed from AppName, HostName, AppInstance and processId to for a unique string
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfDefault.ApplicationStart(System.String[],SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin,System.Boolean)">
+            <summary>
+            Library users may change here how to extract the application instance id from commandline arguments.
+            </summary>
+            <param name="args">the commandline arguments passed to Main()</param>
+            <param name="traceWriter">null or the plugin to write trace</param>
+            <param name="installExitHandler">when true: install handlers for normal and exceptional application exit</param>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.Instance">
+            <summary>
+            Library users may plug in their own implementation of IWcfDefault to WcfDefault.Instance.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.RouterPort">
+            <summary>
+            The WcfRouter service listens on this port. The WcfRouter must be running on every host having services.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.RouterServiceName">
+            <summary>
+            The WcfRouter service listens on this name.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.ApplicationName">
+            <summary>
+            the name of this application is used for tracing and for identifying an ActorOutput
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.ApplicationVersion">
+            <summary>
+            The version of this application is used for information in ActorPort
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.ApplicationInstance">
+            <summary>
+            Library users may change here how to get an application instance id.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.ProcessId">
+            <summary>
+            Operating system process id of this application.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.AppIdentification">
+            <summary>
+            The unique AppIdentification for this application instance
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfDefault.TraceFolder">
+            <summary>
+            Get the folder name where tracefiles may be stored. 
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfMessageHandler">
+            <summary>
+            A general handler for internal and external messages. Called on the correct thread (synchronization context).
+            </summary>
+            <param name="id">the received request or response containing message and sender.</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfMessageHandlerAsync">
+            <summary>
+            A handler for internal and external messages. Called on the correct thread (synchronization context).
+            </summary>
+            <param name="id">the received request or response containing message and sender.</param>
+            <param name="dummy">unused parameter to make signature non ambiguous (temporary for VisualStudio 11).</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfMessageHandler`1">
+            <summary>
+            A handler for internal and external messages to ActorPort objects. Called on the correct thread (synchronization context).
+            </summary>
+            <param name="id">the received request or response containing message and sender.</param>
+            <param name="senderContext">the local id.Sender.SenderContext object present when the request or response is recived.</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfMessageHandlerAsync`1">
+            <summary>
+            A handler for internal and external messages to ActorPort objects. Called on the correct thread (synchronization context).
+            </summary>
+            <param name="id">the received request or response containing message and sender.</param>
+            <param name="senderContext">the local id.Sender.SenderContext object present when the request or response is recived.</param>
+            <param name="dummy">unused parameter to make signature non ambiguous (temporary for VisualStudio 11).</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.AsyncResponseHandler">
+            <summary>
+            Extension method On implements this delegate for handling messages directly in a Send context.
+            <see cref="M:SourceForge.AsyncWcfLib.WcfExtensionMethods.On``1(SourceForge.AsyncWcfLib.WcfReqIdent,System.Action{``0})"/>, <see cref="M:SourceForge.AsyncWcfLib.ActorOutput.SendOut(SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)"/>
+            </summary>
+            <param name="id">the received response or errormessage from the connected service</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfExtensionMethods">
+            <summary>
+            Contains extension methods for AsyncWcfLib.
+            To use extension methods you need to reference assembly 'System.Core'
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfExtensionMethods.On``1(SourceForge.AsyncWcfLib.WcfReqIdent,System.Action{``0})">
+            <summary>
+            <para>Execute code, when message type matches the template parameter. Used to add lambda expressions, e.g.</para>
+            <para>rsp.On&lt;WcfIdleMessage>(idle => {do something with idle message 'idle'})</para>
+            <para>   .On&lt;WcfErrorMessage>(err => {do something with error message 'err'})</para>
+            </summary>
+            <typeparam name="T">The message type looked for.</typeparam>
+            <param name="id">Parameter is added by the compiler.</param>
+            <param name="handle">A delegate or lambda expression that will be executed, when the type matches.</param>
+            <returns>The same request, for chained calls.</returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfIdleMessage">
+            <summary>
+            <para>A message without information content. Just for alive check or default response.</para>
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfErrorMessage">
+            <summary>
+            <para>An error-message is generated when an exeption or timeout occurs on client or service side.</para>
+            <para>The message contains a code indicating where the error occured and a text representation of the exception.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Message">
+            <summary>
+            Get the exception information.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.InnerMessage">
+            <summary>
+            Get the exception information.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.StackTrace">
+            <summary>
+            Get the exception information.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.z_error">
+            <summary>
+            z_error is public but used internally only! Use 'Error' instead!
+            Reason: http://msdn.microsoft.com/en-us/library/bb924412%28v=VS.100%29.aspx
+            Error is stramed as int in order to make it reverse compatible to older communication partners
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfErrorMessage.#ctor">
+            <summary>
+            Create an empty error message
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfErrorMessage.#ctor(SourceForge.AsyncWcfLib.WcfErrorMessage.Code,System.String)">
+            <summary>
+            Create a error message.
+            </summary>
+            <param name="err">general reason.</param>
+            <param name="text">unique information where te error occured.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfErrorMessage.#ctor(SourceForge.AsyncWcfLib.WcfErrorMessage.Code,System.Exception)">
+            <summary>
+            Create a error message.
+            </summary>
+            <param name="err">general reason.</param>
+            <param name="ex">detailed information about the error.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfErrorMessage.ToString">
+            <summary>
+            Trace the errormessage
+            </summary>
+            <returns>string containing all information about the error</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfErrorMessage.Error">
+            <summary>
+            Get or set the Error-Code
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfErrorMessage.Code">
+            <summary>
+            Most Error-Codes uniquely definies the code position where the error occured.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.Undef">
+            <summary>
+            Code not set or unknown.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.Ok">
+            <summary>
+            No error.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.AppUnhandledExceptionOnService">
+            <summary>
+            An exception occured while executing the request in the service-application.
+            Set by library user.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.AppRequestNotAcceptedByService">
+            <summary>
+            The service-application does not know or does not accept this request.
+            Set by library user.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.AppServiceNotReady">
+            <summary>
+            The request could not be handled by the service-application as some subsystems are not ready.
+            Set by library user.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.AppDataNotAvailableInService">
+            <summary>
+            The request could not be handled by the service-application as the data is not available.
+            Set by library user.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.LastAppCode">
+            <summary>
+            This and enum values up to NotConnected are internally mapped to 'Undef' (used to check version compatibility).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.NotConnected">
+            <summary>
+            Cannot send as the client is not (yet) connected.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotOpen">
+            <summary>
+            Cannot open the client (configuration error).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.ServiceNotRunning">
+            <summary>
+            Cannot open the service connection (refused by target).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.RouterNotRunning">
+            <summary>
+            Cannot open the router connection (refused by target).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotStartConnect">
+            <summary>
+            Exception while sending (serializing) the first connect message.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotConnect">
+            <summary>
+            No response from service, when trying to connect.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotConnectRouter">
+            <summary>
+            Wrong response from WCF router, when trying to connect.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotStartSend">
+            <summary>
+            Exception while sending (serializing) a message.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotSend">
+            <summary>
+            Exception received when waiting for response.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.CouldNotDispatch">
+            <summary>
+            Error while dispaching a message to another thread inside the application.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.TimeoutOnClient">
+            <summary>
+            The service did not respond in time. Detected by client.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.TimeoutOnService">
+            <summary>
+            The service did not respond in time. Detected by service itself.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.ReqOrRspNotSerializableOnService">
+            <summary>
+            Exception while deserializing or serializing on service side.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.RspNotDeserializableOnClient">
+            <summary>
+            null message received.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.RequestTypeUnknownOnService">
+            <summary>
+            The request-message-type is not registered as a known type on this service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.ClientIdNotFoundOnService">
+            <summary>
+            Request with unknown client id.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.ClientDetectedUnhandledExceptionOnService">
+            <summary>
+            An exception occured while executing the request in the service-application.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.UnhandledExceptionOnService">
+            <summary>
+            An exception occured while executing the request in the service-application.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfErrorMessage.Code.Last">
+            <summary>
+            This and higher enum values are internally mapped to 'Undef' (used to check version compatibility).
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfPartnerMessage">
+            <summary>
+            <para>This class identifies a communication partner (client or service).</para>
+            <para>It is used to open and close communication.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.IsServiceName">
+            <summary>
+            IsServiceName=true : A service name must be unique in the plant, independant of host or application.
+            IsServiceName=false: A client  name must for unique identification be combined with application name, host name, instance- or process id.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Name">
+            <summary>
+            Identification in Trace and name of endpoint address in App.config file.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.AppName">
+            <summary>
+            Unique name of an application or service in the users WcfContract.Namespace.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.AppInstance">
+            <summary>
+            Unique instance number of the application (unique in a plant or on a host, depending on WcfDefault.IsAppIdUniqueInPlant).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.ProcessId">
+            <summary>
+            Process id of the application, given by the operating system (unique on a host at a certain time).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.AppVersion">
+            <summary>
+            Assembly version of the application.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.CifComponentName">
+            <summary>
+            Assembly name of an important CifComponent containig some messages
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.CifVersion">
+            <summary>
+            Assembly version of the important CifComponent
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.HostName">
+            <summary>
+            Host running the application
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Uri">
+            <summary>
+            <para>Universal resource identifier to reach the input of the service or client.</para>
+            <para>E.g. RouterService: http://localhost:40000/AsyncWcfLib/RouterService</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.AddressList">
+            <summary>
+            <para>To support networks without DNS server, the WcfRouter keeps a list of all IP-Adresses of a host.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.TimeoutSeconds">
+            <summary>
+            After a service has no message received for TimeoutSeconds, it may render the connection to this client as disconnected.
+            0 means no timeout. 
+            The client should send at least 2 messages each TimeoutSeconds-period in order to keep the correct connection state on the service.
+            A Service is trying to notify 2 messages each TimeoutSeconds-period in order to check a dual-Http connection.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.RouterHopCount">
+            <summary>
+            The message from the original service has RouterHopCount=0. The same message sent from the WcfRouter on the local host has RouterHopCount=1.
+            Each router increments the hopcount on reception of a message.
+            A router accepts new data only if the receiving hop count is smaller than the stored.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.ApplicationRunTime">
+            <summary>
+            A service having a longer ApplicationRunTime wins the competition when two services with same name are running.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.z_usage">
+            <summary>
+            m_usage is public but used internally only! Access 'Usage' instead!
+            Reason: http://msdn.microsoft.com/en-us/library/bb924412%28v=VS.100%29.aspx
+            'Usage' is streamed as int in order to make it reverse compatible to older communication partners
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfPartnerMessage.#ctor(SourceForge.AsyncWcfLib.IActorPortId,SourceForge.AsyncWcfLib.WcfPartnerMessage.Use)">
+            <summary>
+            <para>Create a message from a ActorPort.</para>
+            </summary>
+            <param name="p">Copy data from partner p.</param>
+            <param name="usage">Usage enumeration of this message.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfPartnerMessage.#ctor(SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            <para>Copy a WcfPartnerMessage.</para>
+            </summary>
+            <param name="p">Copy data from partner p.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfPartnerMessage.IsEqualTo(SourceForge.AsyncWcfLib.WcfPartnerMessage)">
+            <summary>
+            Check if two communication partner objects represent the same partner
+            </summary>
+            <param name="p">second partner</param>
+            <returns>true if AppName + AppInstance + Client- or ServiceName are equal</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfPartnerMessage.IsEqualTo(SourceForge.AsyncWcfLib.IActorPortId)">
+            <summary>
+            Check if two communication partner objects represent the same partner
+            </summary>
+            <param name="p">second partner</param>
+            <returns>true if AppName + AppInstance + Client- or ServiceName are equal</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfPartnerMessage.ToString">
+            <summary>
+            Creates string representation of WcfPartnerMessage.
+            </summary>
+            <returns>String representation of this message.</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfPartnerMessage.Usage">
+            <summary>
+            The message may be used for several purposes.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use">
+            <summary>
+            Usage of WcfPartnerMessage triggers functionality on service oder client side while connecting/disconnecting.
+            Use is set to ServiceEnableRequest when a Service is opened or ClientConnectRequest when a client is connected. 
+            Use is set to another state when a Service is closed or a client is disconnected or a timeout has occured. 
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.Undef">
+            <summary>
+            A constructor has been called that does not define the usage of this class.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.MyAddress">
+            <summary>
+            A constructor has been called that sets the own address of a service or client.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ClientConnectRequest">
+            <summary>
+            The identified client has sent a connect request to its service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceConnectResponse">
+            <summary>
+            The identified service has accepted the connect request from a client.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ClientDisconnectRequest">
+            <summary>
+            The identified client has sent a disconnect request to its service.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceDisconnectResponse">
+            <summary>
+            The identified service has accepted the disconnect request from a client.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceEnableRequest">
+            <summary>
+            The identified service has sent a register request to WcfRouter.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceEnableResponse">
+            <summary>
+            The identified service has been registered in WcfRouter.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceDisableRequest">
+            <summary>
+            The identified service is going to be closed, it has informed WcfRouter about it.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceDisableResponse">
+            <summary>
+            The identified service is marked as closed in WcfRouter.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceAddressRequest">
+            <summary>
+            The service name is going to be looked up in WcfRouter.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.ServiceAddressResponse">
+            <summary>
+            The complete, matching service identification has been found in WcfRouter registry.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfPartnerMessage.Use.Last">
+            <summary>
+            This and higher enum values are internally mapped to 'Undef' (used to check version compatibility).
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfState">
+            <summary>
+            Communication state for WcfPartners
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfState.Unlinked">
+            <summary>
+            No link to output or input defined.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfState.Ok">
+            <summary>
+            Connection established, messages may be sent.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfState.Connecting">
+            <summary>
+            AsyncWcfLib is trying to establish a connection.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfState.Disconnected">
+            <summary>
+            Connection is not jet established or has been disconnected.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfState.Faulted">
+            <summary>
+            A timeout or another error has been detected, the connection is currently unusable.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfRouterClient">
+            <summary>
+            A internally used singleton object for all WcfServiceAssistants and WcfClientAsync to register/lookup a service with WcfRouter
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.Instance">
+            <summary>
+            (static) Get or Create the WcfRouterClient singleton 
+            </summary>
+            <returns>singleton instance</returns>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.#ctor">
+            <summary>
+            Initializes a new instance of the WcfRouterClient class.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.DisconnectAll">
+            <summary>
+            (static) Close all incoming network connections and send a ServiceDisable messages to WcfRouterService.
+                     Disconnects all outgoing network connections and send ClientDisconnectRequest to connected services.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.Disconnect">
+            <summary>
+            Shutdown the RouterClient, send disconnect message to WcfRouterService if possible
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.AddService(SourceForge.AsyncWcfLib.Basic.WcfBasicService)">
+            <summary>
+            Add a local WcfServiceAssistant for registration with WcfRouterService
+            </summary>
+            <param name="svc">the local WcfServiceAssistant</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.RemoveService(SourceForge.AsyncWcfLib.Basic.WcfBasicService)">
+            <summary>
+            Remove a local WcfServiceAssistant, send disable-message to WcfRouterService
+            </summary>
+            <param name="svc">the local WcfServiceAssistant</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.AddClient(SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync)">
+            <summary>
+            Add a local WcfBasicClientAsync for handling in DisconnectAll
+            </summary>
+            <param name="clt">the local WcfBasicClientAsync</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfRouterClient.RemoveClient(SourceForge.AsyncWcfLib.Basic.WcfBasicClientAsync)">
+            <summary>
+            Remove a local WcfBasicClientAsync while Disconnecting.
+            </summary>
+            <param name="clt">the local WcfBasicClientAsync</param>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant">
+            <summary>
+            <para>Adds the following features to a WCF service:</para>
+            <para>- registered with WcfRouterService (default = 'http://localhost:40000/AsyncWcfLib/RouterService').</para>
+            <para>- automatic TCP port assignement</para>
+            <para>- automatic handling of the ServiceHost</para>
+            <para>- coordinated shutdown of all ServiceAssistants</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.#ctor(SourceForge.AsyncWcfLib.ActorInput,System.Int32,System.Boolean,SourceForge.AsyncWcfLib.IWcfServiceConfiguration)">
+            <summary>
+            <para>Initializes a new instance of the WcfServiceAssistant class.</para>
+            <para>The service is uniquely identified by the service name.</para>
+            </summary>
+            <param name="serviceIdent">This WcfPartners input is linked to network.</param>
+            <param name="tcpPort">The TCP port for the service or 0, when automatic port allocation may be used.</param>
+            <param name="publishToRouter">True(=default): The servicename will be published to the WcfRouter on localhost.</param>
+            <param name="serviceConfig">Plugin your own service configuration instead of WcfDefault.ServiceConfiguration.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.Disconnect">
+            <summary>
+            <para>Shutdown this service and release all attached resources</para>
+            <para>(ServiceHost, RouterClient + WcfRouterService entry)</para>
+            <para>Send service disable message to WcfRouterService if possible</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.OpenService">
+            <summary>
+            <para>** IsMultithreaded==FALSE **  = default on ActorPort</para>
+            <para>Create and open a ServiceHost running a threadsafe IWcfBasicContractSync-singleton service.</para>
+            <para>These services must be very fast and may only access memory. No file- or database-access and no other synchronous calls are allowed.</para>
+            <para>Calls to the message handler are made from the same thread (synchronization context) that is used now to open the service.</para>
+            <para>An exception is thrown, when your opening thread has no message queue.</para>
+            <para></para>
+            <para>** IsMultithreaded==TRUE **</para>
+            <para>Create and open a ServiceHost running a IWcfBasicContractSync instance for each session in parallel.</para>
+            <para>These services may be relativly slow, when accessing files, databases or doing other synchronous calls.</para>
+            <para>Calls to the message handler are made from different threads, several clients may run in parallel</para>
+            <para>but only one thread at a time is accessing the client and user context.</para>
+            <para></para>
+            <para></para>
+            <para>When there exists no [service name="ConcreteTypeOfServiceInstance"] entry in the App.config file,</para>
+            <para>or the entry has no endpoint (apart from a possible "mex" endpoint),</para>
+            <para>the WcfServiceAssistant creates a standard service URI containig the next free TCP port and the service name.</para>
+            <para>E.g. "http://host:1234/AsyncWcfLib/ServiceName"</para>
+            <para>It registeres the service with WcfRouterService, so clients can find the dynamically generated TCP port.</para>
+            </summary>
+            <returns>true if successfully open</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.IsOpen">
+            <summary>
+            Returns true, when service is ready to receive requests.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.InputStateFromNetwork">
+            <summary>
+            Gets or sets the state of the incoming service connection from the network.
+            </summary>
+            <returns>A <see cref="T:SourceForge.AsyncWcfLib.WcfState"/></returns>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.Basic.WcfServiceAssistant.InternalMultithreadedServiceNet40">
+            <summary>
+            This is the Service Entrypoint. It dispatches requests and returns a response.
+            Synchronization, see "Programming WCF Services" by Juval Löwi, 
+            chapters "Resources and Services", "Resource Synchronization Context", "Service Synchronization Context"
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfTrc">
+            <summary>
+            <para>Use these static methods to write debugging trace or logs.</para> 
+            <para>This way you are able to redirect your trace anywhere.</para>
+            <para>How to run it:</para>
+            <para>1. call WcfTrc.UsePlugin(x) when you don't want to use WcfTrcPluginDefault</para>
+            <para>2. call WcfTrc.Start(appInstance) to direct output to the correct file and write a trace-header</para> 
+            <para>3. periodically call WcfTrc.Run() to write the filebuffer to disk</para>
+            <para>4. calling WcfTrc.Stop() during shutdown writes the trace-footer</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.UsePlugin(SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin)">
+            <summary>
+            Set the trace plugin.
+            </summary>
+            <param name="p">Plugin, implementing 'ITracePlugin'</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Start(System.Int32)">
+            <summary>
+            Write trace header and store 'ApplicationInstance'
+            </summary>
+            <param name="appInstance">a number to identify the application instance, see WcfDefault</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Run">
+            <summary>
+            Call it periodically (e.g. 5 sec.) to flush buffer to tracefile
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Stop">
+            <summary>
+            Write trace footer
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Info(System.String,System.String,System.Object)">
+            <summary>
+            Write informative trace about program flow.
+            </summary>
+            <param name="group">defining the object or object group</param>
+            <param name="text">Trace text</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Warning(System.String,System.String,System.Object)">
+            <summary>
+            Write trace for unexpected, but still accepted, recoverable and tested condition.
+            </summary>
+            <param name="group">defining the object or object group</param>
+            <param name="text">Trace text</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Error(System.String,System.String,System.Object)">
+            <summary>
+            Write trace for unexpected condition that cannot be handled properly.
+            </summary>
+            <param name="group">defining the object or object group</param>
+            <param name="text">Trace text</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.Exception(System.String,System.Exception,System.Object)">
+            <summary>
+            Write trace about a handled program exception.
+            </summary>
+            <param name="text">Trace text.</param>
+            <param name="ex">The caugth exception object.</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfTrc.WarningCount">
+            <summary>
+            Count of warning traces (for unit tests).
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfTrc.ErrorCount">
+            <summary>
+            Count of warning traces (for unit tests).
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ResetCount">
+            <summary>
+            Reset the trace counters to zero.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfTrc.ApplicationInstance">
+            <summary>
+            Common application info: ApplicationInstance
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin">
+            <summary>
+            Trace plugins must implement this interface
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Start(System.Int32)">
+            <summary>
+            Write trace header and store 'ApplicationInstance'
+            </summary>
+            <param name="appInstance">A number to identify the application instance, see WcfDefault</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Run">
+            <summary>
+            Call it periodically (e.g. 5 sec.) to flush buffer to tracefile.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Info(System.String,System.String,System.Object)">
+            <summary>
+            Write an info-trace statement.
+            </summary>
+            <param name="group">A mark to group trace source.</param>
+            <param name="text">The trace line(s).</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Warning(System.String,System.String,System.Object)">
+            <summary>
+            Write a warning-trace statement.
+            </summary>
+            <param name="group">A mark to group trace source.</param>
+            <param name="text">The trace line(s).</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Error(System.String,System.String,System.Object)">
+            <summary>
+            Write an error-trace statement.
+            </summary>
+            <param name="group">A mark to group trace source.</param>
+            <param name="text">The trace line(s).</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Exception(System.String,System.Exception,System.Object)">
+            <summary>
+            Write an exception-trace statement.
+            </summary>
+            <param name="text">The trace line(s).</param>
+            <param name="ex">The exception.</param>
+            <param name="logger">Any optional logger framework object to write trace to.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.ITracePlugin.Stop">
+            <summary>
+            Write trace footer.
+            </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault">
+            <summary>
+            <para>The default implementation of a ITracePlugin</para>
+            <para>Writes to visual studio diagnostic console or to Terminal/Console.</para>
+            <para>You can easyly write a similar adapter class to redirect trace output to your own logging framework.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Start(System.Int32)">
+            <summary>
+            Write trace header and store 'ApplicationInstance'
+            </summary>
+            <param name="appInstance">a number to identify the application instance, see WcfDefault</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Run">
+            <summary>
+            Call it periodically (e.g. 5 sec.) to flush buffer to tracefile.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Stop">
+            <summary>
+            Write trace footer.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Info(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Warning(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Error(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Exception(System.String,System.Exception,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.Trace(System.String,System.String,System.String)">
+            <summary>
+            Write a trace statement.
+            </summary>
+            <param name="severity">A mark to distiguish trace severity.</param>
+            <param name="group">A mark to group trace source.</param>
+            <param name="text">The trace line(s).</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.OutputWriter">
+            <summary>
+            use null, Console.Out or Console.Error to specify where the trace should go.
+            null: output to the developments system diagnostic console.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfTrc.PluginDefault.DisplayDate">
+            --------------------------------------------------------------------------
+             <summary>
+             choose whether to trace date on each line or not
+             </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfTrc.PluginFile">
+            <summary>
+            <para>The 'file' implementation of a ITracePlugin</para>
+            <para>Writes 2 tracefiles.</para>
+            <para>Switches to the next tracefile, when 1MB has been reached.</para>
+            <para>Finds default trace folder.</para>
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Start(System.Int32)">
+            <summary>
+            Write trace header and store 'ApplicationInstance'
+            You can easyly write a similar adapter class to redirect trace output to your own logging framework. See WcfTrcPluginDefault.
+            </summary>
+            <param name="appInstance">a number to identify the application instance, see WcfDefault</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Run">
+            <summary>
+            Call it periodically (e.g. 5 sec.) to flush buffer to tracefile
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Stop">
+            <summary>
+            Write trace footer
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Info(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Warning(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Error(System.String,System.String,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Exception(System.String,System.Exception,System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Trace(System.String,System.String,System.String)">
+            <summary>
+            Write a trace statement.
+            </summary>
+            <param name="severity">A mark to distiguish trace severity.</param>
+            <param name="group">A mark to group trace source.</param>
+            <param name="text">The trace line(s).</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.sLastTraceProblem">
+            <summary>
+            Problem report of the tracing itself, for debugging purpose.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Dispose">
+            <summary>
+            Graceful application shutdown, called by stop.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.SetTraceOutput(System.String)">
+            <summary>
+            Set the current tracefile path and name.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.Refresh">
+            --------------------------------------------------------------------------
+             <summary>
+             must be called periodically from Window-Main-Thread
+             </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.AppInfo">
+            <summary>
+            Get tracefile header, may be used for Help - About box.
+            </summary>
+            <returns>tracefile header</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.FileName">
+            <summary>
+            Set or get the current tracefile path and name.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfTrc.PluginFile.DisplayDate">
+            --------------------------------------------------------------------------
+             <summary>
+             choose whether to trace date on each line or not
+             </summary>
+        </member>
+        <member name="T:SourceForge.AsyncWcfLib.WcfReqIdent">
+            <summary>
+            <para>All data for a message sent through AsyncWcfLib.</para>
+            <para>Contains the Message itself as well as some request identification and a reference to the sending ActorPort.</para>
+            <para>The class may be used to send a response to the sender and to trace unique message identification.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfReqIdent.ClientId">
+            <summary>
+            <para>Identifies the client sending the request on the remote service.</para>
+            <para>0=no remote connection or message not sent yet. Id is created by remote service on first connect.</para>
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfReqIdent.RequestId">
+            <summary>
+            <para>RequestId is incremented by WcfAsyncClient for remote connections only. Remote service returns the same number.</para>
+            <para>0=Notification, 11...=remote requests</para>
+            It is used to detect programming errors.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfReqIdent.SendId">
+            <summary>
+            SendId is incremented by WcfAsyncClient for remote connections and remote service on each send operation.
+            It is used to detect missing messages.
+            </summary>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfReqIdent.SourceLambda">
+            <summary>
+            For local and remote requests the send operation may specify a lambda expression handling the response.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfReqIdent.#ctor(SourceForge.AsyncWcfLib.ActorPort,System.Int32,System.UInt32,SourceForge.AsyncWcfLib.IWcfMessage,SourceForge.AsyncWcfLib.AsyncResponseHandler)">
+            <summary>
+            Create a new WcfReqIdent.
+            </summary>
+            <param name="sender">The sending partner.</param>
+            <param name="clientId">The ClientId used on the service.</param>
+            <param name="requestId">The RequestId is incremented by the client.</param>
+            <param name="message">The user payload message to send.</param>
+            <param name="responseHandler">null or a lamda expression to be called, when a response is aynchronously received.</param>
+        </member>
+        <member name="F:SourceForge.AsyncWcfLib.WcfReqIdent.m_boResponse">
+            <summary>
+            After creation a WcfReqIdent is a request.
+            After reception on client side a WcfReqIdent is either a notification or a response.
+            </summary>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfReqIdent.SendResponse(SourceForge.AsyncWcfLib.IWcfMessage)">
+            <summary>
+            Respond to a request. SendResponse may be called several times on one request. The responses are added into a WcfNotificationMessage.
+            The individual messages are received on client side.
+            If SendResponse is not called on a request, AsyncWcfLib automatically returns a WcfIdleMessage to the client.
+            </summary>
+            <param name="msg">The message to send as response.</param>
+        </member>
+        <member name="M:SourceForge.AsyncWcfLib.WcfReqIdent.ToString">
+            <summary>
+            Each message my be printed e.g. to trace.
+            </summary>
+            <returns>The message in readable text form.</returns>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.Message">
+            <summary>
+            WcfReqIdent carry a reference to the user message.
+            The Message itself may be sent to several internal partners and therefore be referenced by several WcfReqIdents.
+            The message is not a [DataMember], it is sent separatly up to ServiceContract V3.0 and again from 3.1++
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.Sender">
+            <summary>
+            WcfReqIdent carry a reference to the ActorPort that has sent the message.
+            Service side: Sender is the client or client-stub   (ActorOutput) that has sent the request. 
+            Client side : Sender is the service or service-proxy (ActorInput) that has sent the response.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.Input">
+            <summary>
+            WcfReqIdent carry a reference to the ActorPort that is receiving the message. 
+            Service side: Input is the service (ActorInput) that is receiving a request. 
+            Client side : Input is the client (ActorOutput) that is receiving a response.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.IsNotification">
+            <summary>
+            Notification is sent from service to client without matching request.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.IsRequest">
+            <summary>
+            Request is sent from client to service (new messages are requests by default).
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.IsResponse">
+            <summary>
+            Response is sent from service to client as answer to a request.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.ClientMark">
+            <summary>
+            Generates part of a standardised mark for trace output on client side.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.SenderMark">
+            <summary>
+            Generates part of a standardised mark for trace output on service side.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.ReqMarkRcv">
+            <summary>
+            Generates part of a standardised mark for trace output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.ReqMarkSnd">
+            <summary>
+            Generates part of a standardised mark for trace output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.CltSndId">
+            <summary>
+            Client sending request: Standardised mark for trace output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.CltRcvId">
+            <summary>
+            Client receiving response: Standardised mark for trace output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.SvcRcvId">
+            <summary>
+            Service receiving request: Standardised mark for trace output.
+            </summary>
+        </member>
+        <member name="P:SourceForge.AsyncWcfLib.WcfReqIdent.SvcSndId">
+            <summary>
+            Service sending response: Standardised mark for trace output.
+            </summary>
+        </member>
+    </members>
+</doc>
