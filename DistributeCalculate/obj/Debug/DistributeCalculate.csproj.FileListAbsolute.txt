@@ -1,4 +1,0 @@
-E:\Develop\DistributeCalculate\DistributeCalculate\bin\Debug\DistributeCalculate.dll
-E:\Develop\DistributeCalculate\DistributeCalculate\bin\Debug\DistributeCalculate.pdb
-E:\Develop\DistributeCalculate\DistributeCalculate\obj\Debug\DistributeCalculate.dll
-E:\Develop\DistributeCalculate\DistributeCalculate\obj\Debug\DistributeCalculate.pdb

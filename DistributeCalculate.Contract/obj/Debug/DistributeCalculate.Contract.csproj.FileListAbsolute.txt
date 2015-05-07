@@ -1,8 +1,0 @@
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\DistributeCalculate.Contract.dll
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\DistributeCalculate.Contract.pdb
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\Nito.Async.dll
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\SF.AsyncWcfLib.dll
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\SF.AsyncWcfLib.pdb
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\bin\Debug\SF.AsyncWcfLib.xml
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\obj\Debug\DistributeCalculate.Contract.dll
-E:\Develop\DistributeCalculate\DistributeCalculate.Contract\obj\Debug\DistributeCalculate.Contract.pdb
