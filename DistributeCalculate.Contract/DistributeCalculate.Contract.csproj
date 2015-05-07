@@ -52,6 +52,7 @@
     <Compile Include="Data\ClientExecuteMessage.cs" />
     <Compile Include="Data\ExecuteType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateMachine\IStateMachine.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

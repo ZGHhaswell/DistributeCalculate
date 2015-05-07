@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using DistributeCalculate.Client.Client;
 
 namespace DistributeCalculate.Client
 {
@@ -13,5 +14,13 @@ namespace DistributeCalculate.Client
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var clientActor = new ClientActor();
+
+            clientActor.Start();
+
+            base.OnStartup(e);
+        }
     }
 }

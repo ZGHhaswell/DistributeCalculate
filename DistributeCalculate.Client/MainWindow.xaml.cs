@@ -40,7 +40,7 @@ namespace DistributeCalculate.Client
             WcfApplication.ApplicationExit += WcfApplicationOnApplicationExit;
             ClientExecuteMessage.AddKnownTypes();
 
-            string host = "localhost:40001";
+            string host = "192.168.1.108:40001";
             string serviceUri = "http://" + host + "/AsyncWcfLib/DistributeService";
             //string serviceUri = "net.tcp://zgh-pc:40001/AsyncWcfLib/DistributeService";
             _actorInput = new ActorInput("ClientInput", InputRequestHandler);
@@ -49,10 +49,8 @@ namespace DistributeCalculate.Client
             _actorOutput.TraceSend = true;
 
             actionThread = new ActionThread();
-                actionThread.Start();
-                actionThread.Do(OnStartup);
-            
-
+            actionThread.Start();
+            actionThread.Do(OnStartup);
 
         }
 
@@ -90,7 +88,6 @@ namespace DistributeCalculate.Client
                 }
                 else
                 {
-                    uint sendContextNumber = _actorOutput.LastSentId + 1000;
                     _actorOutput.SendOut(id.Message);
                     return;
                 }
@@ -125,7 +122,11 @@ namespace DistributeCalculate.Client
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            actionThread.Dispose();
+            if (actionThread != null)
+            {
+                actionThread.Dispose();
+            }
+            
             base.OnClosing(e);
         }
     }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using DistributeCalculate.Server.Server;
 
 namespace DistributeCalculate.Server
 {
@@ -13,5 +14,13 @@ namespace DistributeCalculate.Server
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var serverActor = new ServerActor();
+
+            serverActor.Start();
+
+            base.OnStartup(e);
+        }
     }
 }

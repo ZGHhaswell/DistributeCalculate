@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\Develop\DistributeCalculate\DistributeCalculate.Client\obj\Debug\
+D:\Develop\DistributeCalculate\DistributeCalculate.Client\obj\Debug\
 DistributeCalculate.Client
 none
 false
 DEBUG;TRACE
-E:\Develop\DistributeCalculate\DistributeCalculate.Client\App.xaml
-11151548125
+D:\Develop\DistributeCalculate\DistributeCalculate.Client\App.xaml
+21165746532
 
-9-62190807
-171876013926
-MainWindow.xaml;
+122142596007
+171355190063
+ClientStepViews\ClientJoinInWindow.xaml;MainWindow.xaml;
 
 False
 

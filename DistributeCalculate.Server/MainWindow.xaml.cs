@@ -31,30 +31,39 @@ namespace DistributeCalculate.Server
             InitializeComponent();
         }
 
+        private ActorInput actorInput;
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             //Action action = () =>
             //{
-                WcfDefault.ApplicationStart(new string[] { }, new WcfTrc.PluginFile(), /*ExitHandler=*/true);
-                WcfApplication.ApplicationExit += WcfApplicationOnApplicationExit;
-                ClientExecuteMessage.AddKnownTypes();
+            WcfDefault.ApplicationStart(new string[] { }, new WcfTrc.PluginFile(), /*ExitHandler=*/true);
+            WcfApplication.ApplicationExit += WcfApplicationOnApplicationExit;
+            ClientExecuteMessage.AddKnownTypes();
 
-                DistributeService test = new DistributeService(this.InfoTextBox);
-                ActorInput service = new ActorInput("DistributeService", test.WcfRequest);
-                service.IsMultithreaded = true; // we have no message queue in a console application
+            DistributeService test = new DistributeService(this.InfoTextBox);
+            actorInput = new ActorInput("DistributeService", test.WcfRequest);
+            actorInput.IsMultithreaded = true; // we have no message queue in a console application
 
-                service.LinkInputToNetwork("DistributeService", 40001);
+            actorInput.LinkInputToNetwork("DistributeService", 40001, false);
 
-                if (service.TryConnect())
-                {
-                    test.Info(service.Uri.ToString());
-                }
+
+            actorInput.OnInputConnected += ActorInputOnOnInputConnected;
+
+            if (actorInput.TryConnect())
+            {
+                test.Info(actorInput.Uri.ToString());
+            }
             //};
             //action.BeginInvoke(null, null);
 
 
 
 
+        }
+
+        private void ActorInputOnOnInputConnected(WcfReqIdent id)
+        {
         }
 
         private void WcfApplicationOnApplicationExit(WcfApplication.CloseType closeType, ref bool goExit)
@@ -64,6 +73,11 @@ namespace DistributeCalculate.Server
                 ActorPort.DisconnectAll();  
             }
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            actorInput.PostInput(new ClientExecuteBackMessage(ExecuteType.JoinCompleted));
         }
     }
 }

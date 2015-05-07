@@ -5,6 +5,7 @@
     <Grid>
         <Button x:Name="StartServiceBt" Content="开启服务"  Width="75" Height="25" Margin="26,26,416,269" Click="ButtonBase_OnClick" RenderTransformOrigin="0.975,1.531"/>
         <TextBox x:Name="InfoTextBox" HorizontalAlignment="Left" Height="223" Margin="10,74,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="497"/>
+        <Button Content="Input" HorizontalAlignment="Left" Margin="133,26,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
 
     </Grid>
 </Window>
